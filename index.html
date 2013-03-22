@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Chicago Badge</title>
+<style>
+body { background: black; }
+#sources { display: none; }
+</style>
+<canvas id="canvas" width="1080" height="1029"></canvas>
+<div id="sources">
+  <img id="hex-mask" src="hex-mask.png">
+  <img id="ribbon" src="ribbon.png">
+</div>
+<script>
+function buildBadge(photo) {
+  var START_X = 22;
+  var RIBBON_Y = 600;
+
+  var canvas = document.getElementById('canvas');
+  var hexMask = document.getElementById('hex-mask');
+  var ribbon = document.getElementById('ribbon');
+
+  var ctx = canvas.getContext('2d');
+
+  ctx.drawImage(hexMask, START_X, 0);
+  ctx.globalCompositeOperation = "source-in";
+  ctx.drawImage(photo, START_X, 0);
+
+  // Reverse-engineered from the CSS3 in
+  // http://webdesignerwall.com/tutorials/css3-image-styles-part-2  
+  var gloss = ctx.createLinearGradient(500, 0, 500, 500);
+  ctx.globalCompositeOperation = "source-atop";
+  gloss.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+  gloss.addColorStop(1, 'rgba(255, 255, 255, 0.15)');
+  ctx.fillStyle = gloss;
+  ctx.fillRect(0, 0, 1080, 500);
+
+  ctx.globalCompositeOperation = "source-over";
+  ctx.drawImage(ribbon, 0, RIBBON_Y);
+}
+
+function solidCanvas(width, height, color) {
+  var canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, width, height);
+
+  return canvas;
+}
+
+onload = function() {
+  buildBadge(solidCanvas(1029, 1029, 'red'));
+};
+</script>
