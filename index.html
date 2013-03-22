@@ -7,10 +7,33 @@ body { background: black; }
 </style>
 <div id="sources">
   <img id="hex-mask" src="hex-mask.png">
+  <!-- Made by @iamjessklein -->
   <img id="ribbon" src="ribbon.png">
+  <!-- Taken from http://www.w3.org/html/logo/ -->
+  <img id="glyph" src="HTML5_Badge_512.png">
+  <!-- Taken from http://subtlepatterns.com/escheresque-dark/ -->
+  <img id="background" src="escheresque.png">
 </div>
 <script>
-function buildBadge(photo) {
+// Builds a Chicago badge in a <canvas> element and returns it.
+// 
+// Options:
+//
+//   background:
+//     The background color or image pattern to repeat. Should be a CSS color
+//     string or a canvas image source (default is 'gray')
+//
+//   glyph:
+//     The optional image to put in the center of the badge. Should be a canvas
+//     image source.
+//
+//   glyphScale:
+//     Percentage to scale the glyph, from 0.0 to 1.0 (default is 1.0).
+//
+//   gloss:
+//     Whether to apply a gloss effect (default is true).
+
+function buildBadge(options) {
   var RIBBON_PADDING = 21;
   var EXTRA_PADDING = 6;
   var RIBBON_Y = 600;
@@ -22,6 +45,10 @@ function buildBadge(photo) {
   var hexMask = document.getElementById('hex-mask');
   var ribbon = document.getElementById('ribbon');
 
+  options.background = options.background || 'gray';
+  options.glyphScale = options.glyphScale || 1;
+  if (typeof(options.gloss) == 'undefined') options.gloss = true;
+
   canvas.width = FULL_WIDTH;
   canvas.height = FULL_HEIGHT;
 
@@ -29,18 +56,39 @@ function buildBadge(photo) {
 
   ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING);
   ctx.globalCompositeOperation = "source-in";
-  ctx.drawImage(photo, RIBBON_PADDING, RIBBON_PADDING,
-                       BASE_SIDE_LENGTH, BASE_SIDE_LENGTH);
 
-  // Reverse-engineered from the CSS3 in
-  // http://webdesignerwall.com/tutorials/css3-image-styles-part-2  
-  var gloss = ctx.createLinearGradient(0, 0, 0, FULL_HEIGHT/2);
+  if (typeof(options.background) == 'string')
+    options.background = solidCanvas(16, 16, options.background);
+
+  var bgPattern = ctx.createPattern(options.background, 'repeat');
+  ctx.fillStyle = bgPattern;
+  ctx.fillRect(0, 0, FULL_WIDTH, FULL_HEIGHT);
 
   ctx.globalCompositeOperation = "source-atop";
-  gloss.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
-  gloss.addColorStop(1, 'rgba(255, 255, 255, 0.15)');
-  ctx.fillStyle = gloss;
-  ctx.fillRect(0, 0, FULL_WIDTH, FULL_HEIGHT/2);
+
+  if (options.glyph) {
+    var glyphSize = {
+      width: options.glyph.width * options.glyphScale,
+      height: options.glyph.height * options.glyphScale
+    };
+
+    ctx.drawImage(options.glyph,
+                  FULL_WIDTH/2 - glyphSize.width/2,
+                  FULL_HEIGHT/2 - glyphSize.height/2,
+                  glyphSize.width,
+                  glyphSize.height);
+  }
+
+  if (options.gloss) {
+    // Reverse-engineered from the CSS3 in
+    // http://webdesignerwall.com/tutorials/css3-image-styles-part-2  
+    var gloss = ctx.createLinearGradient(0, 0, 0, FULL_HEIGHT/2);
+
+    gloss.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+    gloss.addColorStop(1, 'rgba(255, 255, 255, 0.15)');
+    ctx.fillStyle = gloss;
+    ctx.fillRect(0, 0, FULL_WIDTH, FULL_HEIGHT/2);
+  }
 
   ctx.globalCompositeOperation = "source-over";
   ctx.drawImage(ribbon, 0, RIBBON_Y);
@@ -61,6 +109,9 @@ function solidCanvas(width, height, color) {
 }
 
 onload = function() {
-  document.body.appendChild(buildBadge(solidCanvas(16, 16, 'red')));
+  document.body.appendChild(buildBadge({
+    background: document.getElementById('background'),
+    glyph: document.getElementById('glyph')
+  }));
 };
 </script>
