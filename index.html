@@ -5,37 +5,46 @@
 body { background: black; }
 #sources { display: none; }
 </style>
-<canvas id="canvas" width="1080" height="1029"></canvas>
 <div id="sources">
   <img id="hex-mask" src="hex-mask.png">
   <img id="ribbon" src="ribbon.png">
 </div>
 <script>
 function buildBadge(photo) {
-  var START_X = 22;
+  var RIBBON_PADDING = 21;
+  var EXTRA_PADDING = 6;
   var RIBBON_Y = 600;
+  var BASE_SIDE_LENGTH = 1029;
+  var FULL_WIDTH = BASE_SIDE_LENGTH + RIBBON_PADDING*2 + EXTRA_PADDING;
+  var FULL_HEIGHT = FULL_WIDTH;
 
-  var canvas = document.getElementById('canvas');
+  var canvas = document.createElement('canvas');
   var hexMask = document.getElementById('hex-mask');
   var ribbon = document.getElementById('ribbon');
 
+  canvas.width = FULL_WIDTH;
+  canvas.height = FULL_HEIGHT;
+
   var ctx = canvas.getContext('2d');
 
-  ctx.drawImage(hexMask, START_X, 0);
+  ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING);
   ctx.globalCompositeOperation = "source-in";
-  ctx.drawImage(photo, START_X, 0);
+  ctx.drawImage(photo, RIBBON_PADDING, RIBBON_PADDING);
 
   // Reverse-engineered from the CSS3 in
   // http://webdesignerwall.com/tutorials/css3-image-styles-part-2  
-  var gloss = ctx.createLinearGradient(500, 0, 500, 500);
+  var gloss = ctx.createLinearGradient(0, 0, 0, FULL_HEIGHT/2);
+
   ctx.globalCompositeOperation = "source-atop";
   gloss.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
   gloss.addColorStop(1, 'rgba(255, 255, 255, 0.15)');
   ctx.fillStyle = gloss;
-  ctx.fillRect(0, 0, 1080, 500);
+  ctx.fillRect(0, 0, FULL_WIDTH, FULL_HEIGHT/2);
 
   ctx.globalCompositeOperation = "source-over";
   ctx.drawImage(ribbon, 0, RIBBON_Y);
+
+  return canvas;
 }
 
 function solidCanvas(width, height, color) {
@@ -51,6 +60,6 @@ function solidCanvas(width, height, color) {
 }
 
 onload = function() {
-  buildBadge(solidCanvas(1029, 1029, 'red'));
+  document.body.appendChild(buildBadge(solidCanvas(1029, 1029, 'red')));
 };
 </script>
