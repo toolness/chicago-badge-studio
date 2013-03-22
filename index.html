@@ -29,7 +29,8 @@ function buildBadge(photo) {
 
   ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING);
   ctx.globalCompositeOperation = "source-in";
-  ctx.drawImage(photo, RIBBON_PADDING, RIBBON_PADDING);
+  ctx.drawImage(photo, RIBBON_PADDING, RIBBON_PADDING,
+                       BASE_SIDE_LENGTH, BASE_SIDE_LENGTH);
 
   // Reverse-engineered from the CSS3 in
   // http://webdesignerwall.com/tutorials/css3-image-styles-part-2  
@@ -60,6 +61,6 @@ function solidCanvas(width, height, color) {
 }
 
 onload = function() {
-  document.body.appendChild(buildBadge(solidCanvas(1029, 1029, 'red')));
+  document.body.appendChild(buildBadge(solidCanvas(16, 16, 'red')));
 };
 </script>
