@@ -167,7 +167,7 @@ var Chibadge = (function() {
 
   var once = function once(element, eventName, cb) {
     var wrappedCb = function(event) {
-      element.removeEventListener(wrappedCb);
+      element.removeEventListener(eventName, wrappedCb, false);
       cb.call(this, event);
     };
 
