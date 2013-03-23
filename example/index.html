@@ -6,9 +6,6 @@ body { background: black; }
 #sources { display: none; }
 </style>
 <div id="sources">
-  <img id="chibadge-hex-mask" src="../chibadge/hex-mask.png">
-  <!-- Made by @iamjessklein -->
-  <img id="chibadge-ribbon" src="../chibadge/ribbon.png">
   <!-- Taken from http://www.w3.org/html/logo/ -->
   <img id="glyph" src="HTML5_Badge_512.png">
   <!-- Taken from http://subtlepatterns.com/escheresque-dark/ -->
@@ -16,10 +13,10 @@ body { background: black; }
 </div>
 <script src="../chibadge/chibadge.js"></script>
 <script>
-onload = function() {
+document.addEventListener("DOMContentLoaded", function() {
   document.body.appendChild(Chibadge.build({
     background: document.getElementById('background'),
     glyph: document.getElementById('glyph')
   }));
-};
+});
 </script>
