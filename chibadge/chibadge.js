@@ -160,18 +160,15 @@ var Chibadge = (function() {
   };
 
   var loadImage = function loadImage(img, cb) {
-    if (isImageOk(img)) return cb(null, img);
-    once(img, "load", function() { cb(null, img); });
-    once(img, "error", function(event) { cb(event, img); });
-  };
-
-  var once = function once(element, eventName, cb) {
-    var wrappedCb = function(event) {
-      element.removeEventListener(eventName, wrappedCb, false);
-      cb.call(this, event);
+    var onDone = function(event) {
+      img.removeEventListener("load", onDone, false);
+      img.removeEventListener("error", onDone, false);
+      if (event.type == "error") return cb(event, img);
+      cb(null, img);
     };
-
-    element.addEventListener(eventName, wrappedCb, false);
+    if (isImageOk(img)) return cb(null, img);
+    img.addEventListener("load", onDone, false);
+    img.addEventListener("error", onDone, false);
   };
 
   // http://stackoverflow.com/a/1977898
