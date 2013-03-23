@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>chibadge tests</title>
+<link rel="stylesheet" href="qunit.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="../chibadge/chibadge.js"></script>
+<script src="qunit.js"></script>
+<script>
+module("chibadge");
+
+asyncTest("no errors thrown w/ default options", function() {
+  var canvas = Chibadge.build({}, function(err, canvas) {
+    equal(err, null, "no errors occur");
+    ok(canvas instanceof HTMLCanvasElement, "second arg of cb is a canvas");
+    start();
+  });
+  ok(canvas instanceof HTMLCanvasElement, "return value is a canvas");
+});
+
+asyncTest("no errors thrown w/ CSS-style background color", function() {
+  Chibadge.build({background: 'green'}, function(err, canvas) {
+    equal(err, null, "no errors occur");
+    start();
+  });
+});
+
+asyncTest("size option sets width/height of canvas", function() {
+  Chibadge.build({size: 32}, function(err, canvas) {
+    equal(err, null, "no errors occur");
+    equal(canvas.width, 32, "canvas width is set");
+    equal(canvas.height, 32, "canvas height is set");
+    start();
+  });
+});
+
+asyncTest("error thrown if a glyph image doesn't load", function() {
+  var img = document.createElement("img");
+  img.setAttribute("src", "nonexistent.png");
+  Chibadge.build({glyph: img}, function(err) {
+    equal(err.errors.length, 1, "one error returned");
+    equal(err.errors[0].source, img, "error is related to failed image");
+    start();
+  });
+});
+
+asyncTest("error thrown if a background image doesn't load", function() {
+  var img = document.createElement("img");
+  img.setAttribute("src", "nonexistent2.png");
+  Chibadge.build({background: img}, function(err) {
+    equal(err.errors.length, 1, "one error returned");
+    equal(err.errors[0].source, img, "error is related to failed image");
+    start();
+  });
+});
+</script>
+</body>
+</html>
