@@ -1,5 +1,11 @@
 var Chibadge = (function() {
   var Chibadge = {
+    // ## Chibadge.baseUrl
+    //
+    // This is the base URL that points to the chibadge directory, which
+    // contains various assets common to all badges. It defaults to being
+    // automatically detected, but you can set it manually if needed.
+
     baseUrl: (function() {
       var RE = /^(.*)\/chibadge\.js$/;
       var me = document.querySelector('script[src$="chibadge.js"]');
@@ -9,6 +15,7 @@ var Chibadge = (function() {
       }
       return "";
     })(),
+
     // ## Chibadge.build(options, [callback])
     //
     // Builds a Chicago badge in a <canvas> element.
