@@ -15,6 +15,9 @@ var Chibadge = (function() {
     // 
     // Options:
     //
+    //   size:
+    //     The length of each side of the canvas, in pixels (default is 1077).
+    //
     //   background:
     //     The background color or image pattern to repeat. Should be a CSS 
     //     color string or a canvas image source (default is 'gray').
@@ -35,12 +38,11 @@ var Chibadge = (function() {
     // when the canvas is rendered, or if an error occurred.
 
     build: function(options, cb) {
-      var RIBBON_PADDING = 21;
-      var EXTRA_PADDING = 6;
-      var RIBBON_Y = 600;
-      var BASE_SIDE_LENGTH = 1029;
-      var FULL_WIDTH = BASE_SIDE_LENGTH + RIBBON_PADDING*2 + EXTRA_PADDING;
+      var FULL_WIDTH = options.size || 1077;
       var FULL_HEIGHT = FULL_WIDTH;
+      var SCALE_FACTOR = FULL_WIDTH / 1077;
+      var RIBBON_PADDING = 21 * SCALE_FACTOR;
+      var RIBBON_Y = 600 * SCALE_FACTOR;
 
       var canvas = document.createElement('canvas');
       var hexMask = imageAsset('hex-mask.png');
@@ -68,7 +70,9 @@ var Chibadge = (function() {
 
         var ctx = canvas.getContext('2d');
 
-        ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING);
+        ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING,
+                      hexMask.width * SCALE_FACTOR,
+                      hexMask.height * SCALE_FACTOR);
         ctx.globalCompositeOperation = "source-in";
 
         var bgPattern = ctx.createPattern(options.background, 'repeat');
@@ -102,7 +106,9 @@ var Chibadge = (function() {
         }
 
         ctx.globalCompositeOperation = "source-over";
-        ctx.drawImage(ribbon, 0, RIBBON_Y);
+        ctx.drawImage(ribbon, 0, RIBBON_Y,
+                      ribbon.width * SCALE_FACTOR,
+                      ribbon.height * SCALE_FACTOR);
 
         cb(null, canvas);
       });
