@@ -65,11 +65,11 @@ $(function() {
   var renderBadge = function() {
     var renderId = ++renderIdCounter;
     var background = '#' + bgColor.val();
-    var img;
+    var glyph;
 
     if (glyphUrl.val()) {
-      img = document.createElement("img");
-      img.setAttribute("src", glyphUrl.val());
+      glyph = document.createElement("img");
+      glyph.setAttribute("src", glyphUrl.val());
     }
 
     if (bgSubtlepattern.val()) {
@@ -81,7 +81,7 @@ $(function() {
     Chibadge.build({
       size: badgeSize,
       background: background,
-      glyph: img,
+      glyph: glyph,
       glyphScale: parseFloat(glyphScale.val()),
       gloss: gloss[0].checked
     }, function(err, canvas) {
