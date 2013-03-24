@@ -103,11 +103,7 @@ $(function() {
     });
   });
 
-  bgSubtlepattern.change(renderBadge);
-  bgColor.change(renderBadge);
-  glyphUrl.change(renderBadge);
-  glyphScale.change(renderBadge);
-  gloss.change(renderBadge);
+  $(document.body).on("change", "input, select", renderBadge);
   badgeHolder.affix({offset: badgeHolder.offset().top});
   renderBadge();
 });
