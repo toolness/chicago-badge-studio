@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css">
+<style>
+.affix {
+  top: 10px;
+}
+
+input.color {
+  border: none;
+  padding: 3px;
+}
+</style>
+<title>Chicago Badge Studio</title>
+<div class="container">
+  <h1>Chicago Badge Studio</h1>
+  <div class="row">
+    <div class="span4">
+      <form>
+        <fieldset>
+          <h4>Background</h4>
+          <label>Color</label>
+          <input id="bg-color" class="color" value="9E300E">
+          <h4>Glyph</h4>
+          <label>URL</label>
+          <input id="glyph-url" type="text" value="http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-512-noshadow.png">
+          <label>Scaling</label>
+          <input id="glyph-scale" type="text" value="0.5">
+          <h4>Other Options</h4>
+          <label class="checkbox">
+            <input id="gloss" type="checkbox" checked> Glossy
+          </label>
+        </fieldset>
+      </form>
+    </div>
+    <div class="span8">
+      <div id="badge-holder">
+        <p class="muted">Loading&hellip;</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="vendor/jscolor/jscolor.js"></script>
+<script src="vendor/jquery.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.js"></script>
+<script src="chibadge/chibadge.js"></script>
+<script>
+$(function() {
+  var renderIdCounter = 0;
+  var badgeHolder = $("#badge-holder");
+  var bgColor = $("#bg-color");
+  var glyphUrl = $("#glyph-url");
+  var glyphScale = $("#glyph-scale");
+  var gloss = $("#gloss");
+  var badgeSize = badgeHolder.width() - 20;
+  var renderBadge = function() {
+    var renderId = ++renderIdCounter;
+    var img;
+
+    if (glyphUrl.val()) {
+      img = document.createElement("img");
+      img.setAttribute("src", glyphUrl.val());
+    }
+
+    Chibadge.build({
+      size: badgeSize,
+      background: '#' + bgColor.val(),
+      glyph: img,
+      glyphScale: parseFloat(glyphScale.val()),
+      gloss: gloss[0].checked
+    }, function(err, canvas) {
+      if (renderId != renderIdCounter) return;
+      badgeHolder.empty();
+      if (!err) badgeHolder.append(canvas);
+    });
+  };
+
+  bgColor.change(renderBadge);
+  glyphUrl.change(renderBadge);
+  glyphScale.change(renderBadge);
+  gloss.change(renderBadge);
+  badgeHolder.affix({offset: badgeHolder.offset().top});
+  renderBadge();
+});
+</script>
