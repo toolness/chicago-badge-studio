@@ -16,7 +16,7 @@ body { background: black; }
 document.addEventListener("DOMContentLoaded", function() {
   document.body.appendChild(Chibadge.build({
     background: document.getElementById('background'),
-    glyph: document.getElementById('glyph')
+    glyph: Chibadge.coloredMask(document.getElementById('glyph'), 'pink')
   }));
 });
 </script>

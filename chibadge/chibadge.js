@@ -39,6 +39,11 @@ var Chibadge = (function() {
     //   gloss:
     //     Whether to apply a gloss effect (default is true).
     //
+    // Note that a canvas image source is either an <img> element, a
+    // <canvas> element, or an opaque object type specific to this library
+    // that is returned by some of its functions, such as
+    // Chibadge.coloredMask().
+    //
     // This function returns the canvas element, but it may not have anything
     // in it until canvas image sources are loaded. Provide a callback
     // function taking (err, canvas) arguments if you need to know
@@ -122,6 +127,40 @@ var Chibadge = (function() {
       });
 
       return canvas;
+    },
+
+    // ## Chibadge.coloredMask(canvasSource, maskColor)
+    //
+    // This canvas image source returns a canvas image source (usually an
+    // <img> element) masked with the given canvas fill style (e.g., 'pink').
+    // It can be passed to any function calls that accept a canvas image
+    // source.
+
+    coloredMask: function coloredMask(originalCanvasSource, maskColor) {
+      originalCanvasSource = createCanvasSource(originalCanvasSource);
+
+      var canvas = document.createElement('canvas');
+      var maskedCanvasSource = new CanvasCanvasSource(canvas);
+
+      maskedCanvasSource.load = function(cb) {
+        originalCanvasSource.load(function(err) {
+          if (err) return cb(err);
+
+          canvas.width = originalCanvasSource.width();
+          canvas.height = originalCanvasSource.height();
+
+          var ctx = canvas.getContext('2d');
+
+          ctx.drawImage(originalCanvasSource.source, 0, 0);
+          ctx.fillStyle = maskColor;
+          ctx.globalCompositeOperation = 'source-in';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          cb(null, maskedCanvasSource);
+        });
+      };
+
+      return maskedCanvasSource;
     }
   };
 
@@ -149,7 +188,7 @@ var Chibadge = (function() {
     var sourcesDone = 0;
     var errors = [];
     var sourceDone = function sourceDone(err, source) {
-      if (err) errors.push({error: err, source: source.source});
+      if (err) errors.push(err);
       if (++sourcesDone == sources.length) {
         if (errors.length) return cb({
           message: "errors loading image sources",
@@ -196,7 +235,10 @@ var Chibadge = (function() {
         img.removeEventListener("load", onDone, false);
         img.removeEventListener("error", onDone, false);
         clearInterval(interval);
-        if (event.type == "error") return cb(event, self);
+        if (event.type == "error") return cb({
+          error: event,
+          source: self.source
+        });
         cb(null, self);
       };
 
@@ -222,8 +264,11 @@ var Chibadge = (function() {
   };
 
   var createCanvasSource = function createCanvasSource(source) {
-    if (!(source instanceof Element))
+    if (!(source instanceof Element)) {
+      if (source && typeof(source.load) == "function")
+        return source;
       throw new Error("invalid canvas image source: " + source);
+    }
 
     if (source.nodeName == "IMG") {
       return new ImageCanvasSource(source);

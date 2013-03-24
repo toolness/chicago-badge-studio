@@ -38,6 +38,50 @@ asyncTest("size option sets width/height of canvas", function() {
   });
 });
 
+asyncTest("coloredMask propagates errors", function() {
+  var img = document.createElement("img");
+  img.setAttribute("src", "nonexistent3.png");
+  var mask = Chibadge.coloredMask(img, 'pink');
+  mask.load(function(err) {
+    equal(err.source, img, "error source is <img>");
+    start();
+  });
+});
+
+asyncTest("coloredMask works with valid images", function() {
+  var CENTER_PX = 256*(512*4) + (256*4);
+  var img = document.createElement("img");
+  img.setAttribute("src", "../example/HTML5_Badge_512.png");
+  var mask = Chibadge.coloredMask(img, '#0000ff');
+  mask.load(function(err) {
+    equal(err, null, "no errors occur");
+    equal(mask.width(), 512, "canvas width is set");
+    equal(mask.height(), 512, "canvas height is set");
+    var ctx = mask.source.getContext('2d');
+    var imageData = ctx.getImageData(0, 0, 512, 512);
+    equal(imageData.data[3], 0, 'top-left pixel is fully transparent');
+    equal(imageData.data[CENTER_PX + 0], 0, 'center pixel has no red');
+    equal(imageData.data[CENTER_PX + 1], 0, 'center pixel has no green');
+    equal(imageData.data[CENTER_PX + 2], 0xff, 'center pixel has full blue');
+    equal(imageData.data[CENTER_PX + 3], 0xff, 'center pixel is opaque');
+    start();
+  });
+});
+
+asyncTest("glyph accepts an obj w/ the CanvasSource interface", function() {
+  var canvas = document.createElement("canvas");
+  var canvasSource = {
+    source: canvas,
+    width: function() { return canvas.width; },
+    height: function() { return canvas.height; },
+    load: function(cb) { return cb(null, canvasSource); }
+  };
+  Chibadge.build({glyph: canvasSource}, function(err) {
+    equal(err, null, "no errors occur");
+    start();
+  });
+});
+
 asyncTest("error thrown if a glyph image doesn't load", function() {
   var img = document.createElement("img");
   img.setAttribute("src", "nonexistent.png");
