@@ -61,13 +61,15 @@ var Chibadge = (function() {
       options.background = options.background || 'gray';
       if (typeof(options.background) == 'string')
         options.background = solidCanvas(16, 16, options.background);
+      options.background = createCanvasSource(options.background);
+      if (options.glyph) options.glyph = createCanvasSource(options.glyph);
       options.glyphScale = options.glyphScale || 1;
       if (typeof(options.gloss) == 'undefined') options.gloss = true;
 
       canvas.width = FULL_WIDTH;
       canvas.height = FULL_HEIGHT;
 
-      loadCanvasImageSources([
+      loadCanvasSources([
         hexMask,
         ribbon,
         options.background,
@@ -77,12 +79,12 @@ var Chibadge = (function() {
 
         var ctx = canvas.getContext('2d');
 
-        ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING,
-                      hexMask.naturalWidth * SCALE_FACTOR,
-                      hexMask.naturalHeight * SCALE_FACTOR);
+        ctx.drawImage(hexMask.source, RIBBON_PADDING, RIBBON_PADDING,
+                      hexMask.width() * SCALE_FACTOR,
+                      hexMask.height() * SCALE_FACTOR);
         ctx.globalCompositeOperation = "source-in";
 
-        var bgPattern = ctx.createPattern(options.background, 'repeat');
+        var bgPattern = ctx.createPattern(options.background.source, 'repeat');
         ctx.fillStyle = bgPattern;
         ctx.fillRect(0, 0, FULL_WIDTH, FULL_HEIGHT);
 
@@ -90,10 +92,10 @@ var Chibadge = (function() {
 
         if (options.glyph) {
           var glyphSize = {
-            width: options.glyph.naturalWidth * options.glyphScale,
-            height: options.glyph.naturalHeight * options.glyphScale
+            width: options.glyph.width() * options.glyphScale,
+            height: options.glyph.height() * options.glyphScale
           };
-          ctx.drawImage(options.glyph,
+          ctx.drawImage(options.glyph.source,
                         FULL_WIDTH/2 - glyphSize.width/2,
                         FULL_HEIGHT/2 - glyphSize.height/2,
                         glyphSize.width,
@@ -112,9 +114,9 @@ var Chibadge = (function() {
         }
 
         ctx.globalCompositeOperation = "source-over";
-        ctx.drawImage(ribbon, 0, RIBBON_Y,
-                      ribbon.naturalWidth * SCALE_FACTOR,
-                      ribbon.naturalHeight * SCALE_FACTOR);
+        ctx.drawImage(ribbon.source, 0, RIBBON_Y,
+                      ribbon.width() * SCALE_FACTOR,
+                      ribbon.height() * SCALE_FACTOR);
 
         cb(null, canvas);
       });
@@ -138,14 +140,16 @@ var Chibadge = (function() {
   var imageAsset = function imageAsset(filename) {
     var img = document.createElement("img");
     img.src = Chibadge.baseUrl + filename;
-    return img;
+    return new ImageCanvasSource(img);
   };
 
-  var loadCanvasImageSources = function loadCanvasImageSources(sources, cb) {
+  var loadCanvasSources = function loadCanvasSources(sources, cb) {
+    sources = sources.filter(function isSourceTruthy(s) { return !!s; });
+
     var sourcesDone = 0;
     var errors = [];
     var sourceDone = function sourceDone(err, source) {
-      if (err) errors.push({error: err, source: source});
+      if (err) errors.push({error: err, source: source.source});
       if (++sourcesDone == sources.length) {
         if (errors.length) return cb({
           message: "errors loading image sources",
@@ -155,56 +159,79 @@ var Chibadge = (function() {
       }
     };
 
-    sources.forEach(function(source) {
-      if (!source) {
-        return sourceDone(null, source);
-      } else if (!(source instanceof Element)) {
-        return sourceDone("invalid canvas image source", source);
-      }
-
-      if (source.nodeName == "IMG") {
-        loadImage(source, sourceDone);
-      } else if (source.nodeName == "CANVAS") {
-        sourceDone(null, source);
-      } else
-        return sourceDone("unsupported canvas image source: ", source);
-    });
+    sources.forEach(function(s) { s.load(sourceDone); });
   };
 
-  var loadImage = function loadImage(img, cb) {
-    var onDone = function(event) {
-      img.removeEventListener("load", onDone, false);
-      img.removeEventListener("error", onDone, false);
-      clearInterval(interval);
-      if (event.type == "error") return cb(event, img);
-      cb(null, img);
-    };
-    if (isImageOk(img)) return cb(null, img);
-    img.addEventListener("load", onDone, false);
-    img.addEventListener("error", onDone, false);
-    var interval = setInterval(function() {
-      // IE9 is odd and sometimes doesn't fire load events, so we'll manually
-      // poll.
-      if (isImageOk(img)) onDone({type: "load"});
-    }, 100);
+  var ImageCanvasSource = function ImageCanvasSource(img) {
+    this.source = img;
   };
 
-  // http://stackoverflow.com/a/1977898
-  var isImageOk = function IsImageOk(img) {
-    // During the onload event, IE correctly identifies any images that
-    // weren’t downloaded as not complete. Others should too. Gecko-based
-    // browsers act like NS4 in that they report this incorrectly.
-    if (!img.complete)
-      return false;
+  ImageCanvasSource.prototype = {
+    height: function() { return this.source.naturalHeight; },
+    width: function() { return this.source.naturalWidth; },
+    load: function(cb) {
+      var img = this.source;
+      var self = this;
+      var interval;
 
-    // However, they do have two very useful properties: naturalWidth and
-    // naturalHeight. These give the true size of the image. If it failed
-    // to load, either of these should be zero.
-    if (typeof img.naturalWidth != "undefined" && img.naturalWidth == 0)
-      return false;
+      // http://stackoverflow.com/a/1977898      
+      var isImageOk = function IsImageOk() {
+        // During the onload event, IE correctly identifies any images that
+        // weren’t downloaded as not complete. Others should too. Gecko-based
+        // browsers act like NS4 in that they report this incorrectly.
+        if (!img.complete)
+          return false;
 
-    // No other way of checking: assume it’s ok.
-    return true;
+        // However, they do have two very useful properties: naturalWidth and
+        // naturalHeight. These give the true size of the image. If it failed
+        // to load, either of these should be zero.
+        if (typeof img.naturalWidth != "undefined" && img.naturalWidth == 0)
+          return false;
+
+        // No other way of checking: assume it’s ok.
+        return true;
+      };
+
+      var onDone = function(event) {
+        img.removeEventListener("load", onDone, false);
+        img.removeEventListener("error", onDone, false);
+        clearInterval(interval);
+        if (event.type == "error") return cb(event, self);
+        cb(null, self);
+      };
+
+      if (isImageOk()) return cb(null, self);
+      img.addEventListener("load", onDone, false);
+      img.addEventListener("error", onDone, false);
+      interval = setInterval(function() {
+        // IE9 is odd and sometimes doesn't fire load events, so we'll
+        // manually poll.
+        if (isImageOk()) onDone({type: "load"});
+      }, 100);
+    }
+  };
+
+  var CanvasCanvasSource = function CanvasCanvasSource(canvas) {
+    this.source = canvas;
+  };
+
+  CanvasCanvasSource.prototype = {
+    height: function() { return this.source.height; },
+    width: function() { return this.source.width; },
+    load: function(cb) { cb(null, this); }
+  };
+
+  var createCanvasSource = function createCanvasSource(source) {
+    if (!(source instanceof Element))
+      throw new Error("invalid canvas image source: " + source);
+
+    if (source.nodeName == "IMG") {
+      return new ImageCanvasSource(source);
+    } else if (source.nodeName == "CANVAS") {
+      return new CanvasCanvasSource(source);
+    } else
+      throw new Error("unsupported canvas image source element: <" +
+                      source.nodeName.toLowerCase() + ">");
   };
 
   return Chibadge;

@@ -57,6 +57,18 @@ asyncTest("error thrown if a background image doesn't load", function() {
     start();
   });
 });
+
+test("error thrown if glyph is a string", function() {
+  throws(function() {
+    Chibadge.build({glyph: 'lol'});
+  }, /invalid canvas image source: lol/);
+});
+
+test("error thrown if glyph is a <p> element", function() {
+  throws(function() {
+    Chibadge.build({glyph: document.createElement('p')});
+  }, /unsupported canvas image source element: \<p\>/);
+});
 </script>
 </body>
 </html>
