@@ -78,8 +78,8 @@ var Chibadge = (function() {
         var ctx = canvas.getContext('2d');
 
         ctx.drawImage(hexMask, RIBBON_PADDING, RIBBON_PADDING,
-                      hexMask.width * SCALE_FACTOR,
-                      hexMask.height * SCALE_FACTOR);
+                      hexMask.naturalWidth * SCALE_FACTOR,
+                      hexMask.naturalHeight * SCALE_FACTOR);
         ctx.globalCompositeOperation = "source-in";
 
         var bgPattern = ctx.createPattern(options.background, 'repeat');
@@ -90,10 +90,9 @@ var Chibadge = (function() {
 
         if (options.glyph) {
           var glyphSize = {
-            width: options.glyph.width * options.glyphScale,
-            height: options.glyph.height * options.glyphScale
+            width: options.glyph.naturalWidth * options.glyphScale,
+            height: options.glyph.naturalHeight * options.glyphScale
           };
-
           ctx.drawImage(options.glyph,
                         FULL_WIDTH/2 - glyphSize.width/2,
                         FULL_HEIGHT/2 - glyphSize.height/2,
@@ -114,8 +113,8 @@ var Chibadge = (function() {
 
         ctx.globalCompositeOperation = "source-over";
         ctx.drawImage(ribbon, 0, RIBBON_Y,
-                      ribbon.width * SCALE_FACTOR,
-                      ribbon.height * SCALE_FACTOR);
+                      ribbon.naturalWidth * SCALE_FACTOR,
+                      ribbon.naturalHeight * SCALE_FACTOR);
 
         cb(null, canvas);
       });
@@ -176,12 +175,18 @@ var Chibadge = (function() {
     var onDone = function(event) {
       img.removeEventListener("load", onDone, false);
       img.removeEventListener("error", onDone, false);
+      clearInterval(interval);
       if (event.type == "error") return cb(event, img);
       cb(null, img);
     };
     if (isImageOk(img)) return cb(null, img);
     img.addEventListener("load", onDone, false);
     img.addEventListener("error", onDone, false);
+    var interval = setInterval(function() {
+      // IE9 is odd and sometimes doesn't fire load events, so we'll manually
+      // poll.
+      if (isImageOk(img)) onDone({type: "load"});
+    }, 100);
   };
 
   // http://stackoverflow.com/a/1977898
