@@ -59,6 +59,12 @@ input.color {
 var BASE_SUBTLEPATTERN_URL = 'http://subtlepatterns.toolness.org/';
 var BASE_NOUN_URL = 'http://nounproject.toolness.org/';
 
+function img(src) {
+  var img = document.createElement("img");
+  img.setAttribute("src", src);
+  return img;
+}
+
 function addFilenamesAsOptions(selectElement) {
   return function(textFile) {
     textFile.split('\n').forEach(function(filename) {
@@ -87,19 +93,15 @@ $(function() {
     var glyph;
 
     if (glyphUrl.val()) {
-      glyph = document.createElement("img");
-      glyph.setAttribute("src", glyphUrl.val());
+      glyph = img(glyphUrl.val());
     } else if (glyphNoun.val()) {
-      glyph = document.createElement("img");
-      glyph.setAttribute("src", BASE_NOUN_URL + glyphNoun.val());
+      glyph = img(BASE_NOUN_URL + glyphNoun.val());
     }
 
     if (bgSubtlepattern.val()) {
-      background = document.createElement("img");
-      background.setAttribute("src", BASE_SUBTLEPATTERN_URL +
-                                     bgSubtlepattern.val());
+      background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
     }
-
+    
     Chibadge.build({
       size: badgeSize,
       background: background,
