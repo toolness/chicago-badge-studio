@@ -78,7 +78,7 @@ var Validation = (function() {
     get: function() { return this.el.value; },
     set: function(value) {
       each(this.el, "option", function(option) {
-        if (option.value == value) options[i].selected = true;
+        if (option.value == value) option.selected = true;
       });
     }
   });
