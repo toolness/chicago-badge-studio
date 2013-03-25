@@ -51,6 +51,7 @@ input.color {
         </fieldset>
       </form>
       <a id="badge-link" class="btn btn-primary btn-block">Link to this badge</a>
+      <button id="export-button" class="btn btn-block">Export badge image</button>
     </div>
     <div class="span8">
       <div id="badge-holder">
@@ -115,6 +116,7 @@ $(function() {
   var glyphMaskColor = $("#glyph-mask-color");
   var gloss = $("#gloss");
   var badgeLink = $("#badge-link");
+  var exportButton = $("#export-button");
   var badgeSize = badgeHolder.width() - 20;
   var renderBadge = function() {
     var renderId = ++renderIdCounter;
@@ -166,6 +168,10 @@ $(function() {
     addFilenamesAsOptions(DeferredRequests.nounproject.responseText,
                           glyphNoun);
     $(document.body).on("change", "input, select", renderBadge);
+    exportButton.click(function() {
+      alert("To export the badge as an image, load this page in Firefox, " +
+            "right-click on the badge, and select \"Save Image As...\".");
+    });
     badgeHolder.affix({offset: badgeHolder.offset().top});
     Validation.setState(queryObj());
     renderBadge();
