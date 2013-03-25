@@ -59,7 +59,7 @@ input.color {
 var BASE_SUBTLEPATTERN_URL = 'http://subtlepatterns.toolness.org/';
 var BASE_NOUN_URL = 'http://nounproject.toolness.org/';
 
-function selectInputAdder(selectElement) {
+function addFilenamesAsOptions(selectElement) {
   return function(textFile) {
     textFile.split('\n').forEach(function(filename) {
       if (!filename) return;
@@ -113,8 +113,8 @@ $(function() {
     });
   };
 
-  $.get('vendor/subtlepatterns.txt', selectInputAdder(bgSubtlepattern));
-  $.get('vendor/nounproject.txt', selectInputAdder(glyphNoun));
+  $.get('vendor/subtlepatterns.txt', addFilenamesAsOptions(bgSubtlepattern));
+  $.get('vendor/nounproject.txt', addFilenamesAsOptions(glyphNoun));
   $(document.body).on("change", "input, select", renderBadge);
   badgeHolder.affix({offset: badgeHolder.offset().top});
   renderBadge();
