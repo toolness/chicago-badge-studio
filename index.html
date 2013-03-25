@@ -65,6 +65,10 @@ input.color {
 var BASE_SUBTLEPATTERN_URL = 'http://subtlepatterns.toolness.org/';
 var BASE_NOUN_URL = 'http://nounproject.toolness.org/';
 
+function isSafeUrl(str) {
+  return /^https?:\/\//.test(str);
+}
+
 function img(src) {
   var img = document.createElement("img");
   img.setAttribute("src", src);
@@ -101,7 +105,7 @@ $(function() {
     var background;
     var glyph;
 
-    if (bgUrl.val()) {
+    if (isSafeUrl(bgUrl.val())) {
       background = img(bgUrl.val());
     } else if (bgSubtlepattern.val()) {
       background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
@@ -109,7 +113,7 @@ $(function() {
       background = '#' + bgColor.val();
     }
 
-    if (glyphUrl.val()) {
+    if (isSafeUrl(glyphUrl.val())) {
       glyph = img(glyphUrl.val());
     } else if (glyphNoun.val()) {
       glyph = img(BASE_NOUN_URL + glyphNoun.val());
