@@ -50,6 +50,7 @@ input.color {
           </label>
         </fieldset>
       </form>
+      <a id="badge-link" class="btn btn-primary btn-block">Link to this badge</a>
     </div>
     <div class="span8">
       <div id="badge-holder">
@@ -72,6 +73,18 @@ var DeferredRequests = {
 <script>
 var BASE_SUBTLEPATTERN_URL = 'http://subtlepatterns.toolness.org/';
 var BASE_NOUN_URL = 'http://nounproject.toolness.org/';
+
+// Based on http://stackoverflow.com/a/647272.
+function queryObj() {
+  var result = {}, keyValuePairs = location.search.slice(1).split('&');
+
+  keyValuePairs.forEach(function(kvp) {
+    kvp = kvp.split('=');
+    result[decodeURIComponent(kvp[0])] = decodeURIComponent(kvp[1] || '');
+  });
+
+  return result;
+}
 
 function img(src) {
   var img = document.createElement("img");
@@ -101,6 +114,7 @@ $(function() {
   var glyphMask = $("#glyph-mask");
   var glyphMaskColor = $("#glyph-mask-color");
   var gloss = $("#gloss");
+  var badgeLink = $("#badge-link");
   var badgeSize = badgeHolder.width() - 20;
   var renderBadge = function() {
     var renderId = ++renderIdCounter;
@@ -136,6 +150,8 @@ $(function() {
       badgeHolder.empty();
       if (!err) badgeHolder.append(canvas);
     });
+
+    badgeLink.attr("href", "?" + $.param(Validation.getState()));
   };
 
   $.when.apply(
@@ -151,6 +167,7 @@ $(function() {
                           glyphNoun);
     $(document.body).on("change", "input, select", renderBadge);
     badgeHolder.affix({offset: badgeHolder.offset().top});
+    Validation.setState(queryObj());
     renderBadge();
   });
 });
