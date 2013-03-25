@@ -95,8 +95,14 @@ $(function() {
   var badgeSize = badgeHolder.width() - 20;
   var renderBadge = function() {
     var renderId = ++renderIdCounter;
-    var background = '#' + bgColor.val();
+    var background;
     var glyph;
+
+    if (bgSubtlepattern.val()) {
+      background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
+    } else {
+      background = '#' + bgColor.val();
+    }
 
     if (glyphUrl.val()) {
       glyph = img(glyphUrl.val());
@@ -108,10 +114,6 @@ $(function() {
       glyph = Chibadge.coloredMask(glyph, '#' + glyphMaskColor.val());
     }
 
-    if (bgSubtlepattern.val()) {
-      background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
-    }
-    
     Chibadge.build({
       size: badgeSize,
       background: background,
