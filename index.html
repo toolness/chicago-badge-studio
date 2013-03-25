@@ -28,10 +28,15 @@ input.color {
           </select>
           <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</small></p>
           <h4>Glyph</h4>
+          <label>Noun</label>
+          <select id="glyph-noun">
+            <option value="" selected>None</option>
+          </select>
+          <p class="muted"><small>Nouns are courtesy <a href="http://nounproject.com/">nounproject.com</a>. Each noun has its own Creative Commons license.</small></p>
           <label>URL</label>
-          <input id="glyph-url" type="text" value="http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-512-noshadow.png">
+          <input id="glyph-url" type="text">
           <label>Scaling</label>
-          <input id="glyph-scale" type="text" value="0.5">
+          <input id="glyph-scale" type="text" value="1.0">
           <h4>Other Options</h4>
           <label class="checkbox">
             <input id="gloss" type="checkbox" checked> Glossy
@@ -52,12 +57,26 @@ input.color {
 <script src="chibadge/chibadge.js"></script>
 <script>
 var BASE_SUBTLEPATTERN_URL = 'http://subtlepatterns.toolness.org/';
+var BASE_NOUN_URL = 'http://nounproject.toolness.org/';
+
+function selectInputAdder(selectElement) {
+  return function(textFile) {
+    textFile.split('\n').forEach(function(filename) {
+      if (!filename) return;
+      $('<option></option>')
+        .text(filename.split('.')[0].replace(/[_-]/g, ' '))
+        .attr("value", filename)
+        .appendTo(selectElement);
+    });
+  };
+}
 
 $(function() {
   var renderIdCounter = 0;
   var badgeHolder = $("#badge-holder");
   var bgColor = $("#bg-color");
   var bgSubtlepattern = $("#bg-subtlepattern");
+  var glyphNoun = $("#glyph-noun");
   var glyphUrl = $("#glyph-url");
   var glyphScale = $("#glyph-scale");
   var gloss = $("#gloss");
@@ -70,6 +89,9 @@ $(function() {
     if (glyphUrl.val()) {
       glyph = document.createElement("img");
       glyph.setAttribute("src", glyphUrl.val());
+    } else if (glyphNoun.val()) {
+      glyph = document.createElement("img");
+      glyph.setAttribute("src", BASE_NOUN_URL + glyphNoun.val());
     }
 
     if (bgSubtlepattern.val()) {
@@ -91,18 +113,8 @@ $(function() {
     });
   };
 
-  $.when(
-    $.get('vendor/subtlepatterns.txt')
-  ).done(function(subtlepatterns) {
-    subtlepatterns.split('\n').forEach(function(filename) {
-      if (!filename) return;
-      $('<option></option>')
-        .text(filename.split('.')[0].replace(/_/g, ' '))
-        .attr("value", filename)
-        .appendTo(bgSubtlepattern);
-    });
-  });
-
+  $.get('vendor/subtlepatterns.txt', selectInputAdder(bgSubtlepattern));
+  $.get('vendor/nounproject.txt', selectInputAdder(glyphNoun));
   $(document.body).on("change", "input, select", renderBadge);
   badgeHolder.affix({offset: badgeHolder.offset().top});
   renderBadge();
