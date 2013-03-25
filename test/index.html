@@ -51,7 +51,7 @@ asyncTest("coloredMask propagates errors", function() {
 asyncTest("coloredMask works with valid images", function() {
   var CENTER_PX = 256*(512*4) + (256*4);
   var img = document.createElement("img");
-  img.setAttribute("src", "../example/HTML5_Badge_512.png");
+  img.setAttribute("src", "HTML5_Badge_512.png");
   var mask = Chibadge.coloredMask(img, '#0000ff');
   mask.load(function(err) {
     equal(err, null, "no errors occur");
