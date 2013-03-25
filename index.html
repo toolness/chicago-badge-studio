@@ -58,8 +58,14 @@ input.color {
     </div>
   </div>
 </div>
-<script src="vendor/jscolor/jscolor.js"></script>
 <script src="vendor/jquery.js"></script>
+<script>
+var DeferredRequests = {
+  subtlepatterns: $.get('vendor/subtlepatterns.txt'),
+  nounproject: $.get('vendor/nounproject.txt')
+};
+</script>
+<script src="vendor/jscolor/jscolor.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.js"></script>
 <script src="chibadge/chibadge.js"></script>
 <script src="validation.js"></script>
@@ -73,16 +79,14 @@ function img(src) {
   return img;
 }
 
-function addFilenamesAsOptions(selectElement) {
-  return function(textFile) {
-    textFile.split('\n').forEach(function(filename) {
-      if (!filename) return;
-      $('<option></option>')
-        .text(filename.split('.')[0].replace(/[_-]/g, ' '))
-        .attr("value", filename)
-        .appendTo(selectElement);
-    });
-  };
+function addFilenamesAsOptions(textFile, selectElement) {
+  textFile.split('\n').forEach(function(filename) {
+    if (!filename) return;
+    $('<option></option>')
+      .text(filename.split('.')[0].replace(/[_-]/g, ' '))
+      .attr("value", filename)
+      .appendTo(selectElement);
+  });
 }
 
 $(function() {
@@ -134,10 +138,20 @@ $(function() {
     });
   };
 
-  $.get('vendor/subtlepatterns.txt', addFilenamesAsOptions(bgSubtlepattern));
-  $.get('vendor/nounproject.txt', addFilenamesAsOptions(glyphNoun));
-  $(document.body).on("change", "input, select", renderBadge);
-  badgeHolder.affix({offset: badgeHolder.offset().top});
-  renderBadge();
+  $.when.apply(
+    $,
+    // Seriously, why isn't there an Object.values()?
+    Object.keys(DeferredRequests).map(function(name) {
+      return DeferredRequests[name];
+    })
+  ).done(function() {
+    addFilenamesAsOptions(DeferredRequests.subtlepatterns.responseText,
+                          bgSubtlepattern);
+    addFilenamesAsOptions(DeferredRequests.nounproject.responseText,
+                          glyphNoun);
+    $(document.body).on("change", "input, select", renderBadge);
+    badgeHolder.affix({offset: badgeHolder.offset().top});
+    renderBadge();
+  });
 });
 </script>
