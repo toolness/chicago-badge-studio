@@ -37,6 +37,10 @@ input.color {
           <input id="glyph-url" type="text">
           <label>Scaling</label>
           <input id="glyph-scale" type="text" value="1.0">
+          <label class="checkbox">
+            <input id="glyph-mask" type="checkbox" checked> Apply mask color
+          </label>
+          <input id="glyph-mask-color" class="color" value="000000">
           <h4>Other Options</h4>
           <label class="checkbox">
             <input id="gloss" type="checkbox" checked> Glossy
@@ -85,6 +89,8 @@ $(function() {
   var glyphNoun = $("#glyph-noun");
   var glyphUrl = $("#glyph-url");
   var glyphScale = $("#glyph-scale");
+  var glyphMask = $("#glyph-mask");
+  var glyphMaskColor = $("#glyph-mask-color");
   var gloss = $("#gloss");
   var badgeSize = badgeHolder.width() - 20;
   var renderBadge = function() {
@@ -96,6 +102,10 @@ $(function() {
       glyph = img(glyphUrl.val());
     } else if (glyphNoun.val()) {
       glyph = img(BASE_NOUN_URL + glyphNoun.val());
+    }
+
+    if (glyphMask[0].checked && glyph) {
+      glyph = Chibadge.coloredMask(glyph, '#' + glyphMaskColor.val());
     }
 
     if (bgSubtlepattern.val()) {
