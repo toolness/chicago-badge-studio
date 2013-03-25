@@ -125,6 +125,7 @@ $(function() {
   var badgeLink = $("#badge-link");
   var exportButton = $("#export-button");
   var badgeSize = badgeHolder.width() - 20;
+  var origBadgeHolderTop = badgeHolder.offset().top;
   var renderBadge = function() {
     var renderId = ++renderIdCounter;
     var background;
@@ -179,7 +180,14 @@ $(function() {
       alert("To export the badge as an image, load this page in Firefox, " +
             "right-click on the badge, and select \"Save Image As...\".");
     });
-    badgeHolder.affix({offset: badgeHolder.offset().top});
+
+    // We used to use bootstrap's $.affix() for this, but it appears to be
+    // buggy.
+    $(window).on("scroll", function() {
+      var shouldAffix = $(window).scrollTop() > origBadgeHolderTop
+      badgeHolder.toggleClass("affix", shouldAffix);
+    });
+
     Validation.setState(queryObj());
     renderBadge();
   });
