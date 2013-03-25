@@ -27,6 +27,8 @@ input.color {
             <option value="" selected>--</option>
           </select>
           <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</small></p>
+          <label>URL</label>
+          <input id="bg-url" type="text">
           <h4>Glyph</h4>
           <label>Noun</label>
           <select id="glyph-noun">
@@ -86,6 +88,7 @@ $(function() {
   var badgeHolder = $("#badge-holder");
   var bgColor = $("#bg-color");
   var bgSubtlepattern = $("#bg-subtlepattern");
+  var bgUrl = $("#bg-url");
   var glyphNoun = $("#glyph-noun");
   var glyphUrl = $("#glyph-url");
   var glyphScale = $("#glyph-scale");
@@ -98,7 +101,9 @@ $(function() {
     var background;
     var glyph;
 
-    if (bgSubtlepattern.val()) {
+    if (bgUrl.val()) {
+      background = img(bgUrl.val());
+    } else if (bgSubtlepattern.val()) {
       background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
     } else {
       background = '#' + bgColor.val();
