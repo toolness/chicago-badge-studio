@@ -22,7 +22,7 @@ input.color {
         <fieldset>
           <h4>Background</h4>
           <label>Color</label>
-          <input id="bg-color" class="color" value="9E300E">
+          <input id="bg-color" class="color" value="9E300E" data-validator="color">
           <label>Subtle Pattern</label>
           <select id="bg-subtlepattern">
             <option value="" selected>--</option>
@@ -43,7 +43,7 @@ input.color {
           <label class="checkbox">
             <input id="glyph-mask" type="checkbox" checked> Apply mask color
           </label>
-          <input id="glyph-mask-color" class="color" value="000000">
+          <input id="glyph-mask-color" class="color" value="000000" data-validator="color">
           <h4>Other Options</h4>
           <label class="checkbox">
             <input id="gloss" type="checkbox" checked> Glossy
@@ -62,13 +62,10 @@ input.color {
 <script src="vendor/jquery.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.js"></script>
 <script src="chibadge/chibadge.js"></script>
+<script src="validation.js"></script>
 <script>
 var BASE_SUBTLEPATTERN_URL = 'http://subtlepatterns.toolness.org/';
 var BASE_NOUN_URL = 'http://nounproject.toolness.org/';
-
-function isSafeUrl(str) {
-  return /^https?:\/\//.test(str);
-}
 
 function img(src) {
   var img = document.createElement("img");
@@ -106,7 +103,7 @@ $(function() {
     var background;
     var glyph;
 
-    if (isSafeUrl(bgUrl.val())) {
+    if (Validation.isSafeUrl(bgUrl.val())) {
       background = img(bgUrl.val());
     } else if (bgSubtlepattern.val()) {
       background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
@@ -114,7 +111,7 @@ $(function() {
       background = '#' + bgColor.val();
     }
 
-    if (isSafeUrl(glyphUrl.val())) {
+    if (Validation.isSafeUrl(glyphUrl.val())) {
       glyph = img(glyphUrl.val());
     } else if (glyphNoun.val()) {
       glyph = img(BASE_NOUN_URL + glyphNoun.val());
