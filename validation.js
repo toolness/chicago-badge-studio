@@ -45,6 +45,28 @@ var Validation = (function() {
     return Validator;
   };
 
+  Validation.types.boolean = validator({
+    get: function() { return this.el.checked.toString(); },
+    set: function(value) {
+      if (value == 'true') this.el.checked = true;
+      if (value == 'false') this.el.checked = false;
+    }
+  });
+
+  Validation.types.url = validator({
+    get: function() { return this.el.value; },
+    set: function(value) {
+      if (Validation.isSafeUrl(value)) this.el.value = value;
+    }
+  });
+
+  Validation.types.float = validator({
+    get: function() { return this.el.value; },
+    set: function(value) {
+      if (!isNaN(parseFloat(value))) this.el.value = value;
+    }
+  });
+
   Validation.types.color = validator({
     get: function() { return this.el.value; },
     set: function(value) {

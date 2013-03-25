@@ -24,29 +24,29 @@ input.color {
           <label>Color</label>
           <input id="bg-color" class="color" value="9E300E" data-validator="color">
           <label>Subtle Pattern</label>
-          <select id="bg-subtlepattern">
+          <select id="bg-subtlepattern" data-validator="select">
             <option value="" selected>--</option>
           </select>
           <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</small></p>
           <label>URL</label>
-          <input id="bg-url" type="text">
+          <input id="bg-url" type="text" data-validator="url">
           <h4>Glyph</h4>
           <label>Noun</label>
-          <select id="glyph-noun">
+          <select id="glyph-noun" data-validator="select">
             <option value="" selected>--</option>
           </select>
           <p class="muted"><small>Nouns are courtesy <a href="http://nounproject.com/">nounproject.com</a>. Each noun has its own Creative Commons license.</small></p>
           <label>URL</label>
-          <input id="glyph-url" type="text">
+          <input id="glyph-url" type="text" data-validator="url">
           <label>Scaling</label>
-          <input id="glyph-scale" type="text" value="1.0">
+          <input id="glyph-scale" type="text" value="1.0" data-validator="float">
           <label class="checkbox">
-            <input id="glyph-mask" type="checkbox" checked> Apply mask color
+            <input id="glyph-mask" type="checkbox" data-validator="boolean" checked> Apply mask color
           </label>
           <input id="glyph-mask-color" class="color" value="000000" data-validator="color">
           <h4>Other Options</h4>
           <label class="checkbox">
-            <input id="gloss" type="checkbox" checked> Glossy
+            <input id="gloss" type="checkbox" data-validator="boolean" checked> Glossy
           </label>
         </fieldset>
       </form>
