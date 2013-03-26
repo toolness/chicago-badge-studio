@@ -135,16 +135,6 @@ function img(src) {
   return img;
 }
 
-function addFilenamesAsOptions(textFile, selectElement) {
-  textFile.split('\n').forEach(function(filename) {
-    if (!filename) return;
-    $('<option></option>')
-      .text(filename.split('.')[0].replace(/[_-]/g, ' '))
-      .attr("value", filename)
-      .appendTo(selectElement);
-  });
-}
-
 function startStateManager(options) {
   var onChange = options.onChange || function() {};
   var latestState = $.extend(Validation.getState(), queryObj());
