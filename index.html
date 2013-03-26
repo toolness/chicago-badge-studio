@@ -92,10 +92,22 @@ input.color {
 </div>
 <script src="vendor/jquery.js"></script>
 <script>
-var DeferredRequests = {
-  subtlepatterns: $.get('vendor/subtlepatterns.txt'),
-  nounproject: $.get('vendor/nounproject.txt')
-};
+function addFilenamesAsOptions(url, selectElement) {
+  return $.get(url, function(textFile) {
+    textFile.split('\n').forEach(function(filename) {
+      if (!filename) return;
+      $('<option></option>')
+        .text(filename.split('.')[0].replace(/[_-]/g, ' '))
+        .attr("value", filename)
+        .appendTo(selectElement);
+    });
+  });
+}
+
+var deferredRequests = $.when(
+  addFilenamesAsOptions("vendor/subtlepatterns.txt", "#bg-subtlepattern"),
+  addFilenamesAsOptions("vendor/nounproject.txt", "#glyph-noun")
+);
 </script>
 <script src="vendor/jscolor/jscolor.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.js"></script>
@@ -215,17 +227,7 @@ $(window).load(function() {
     });
   };
 
-  $.when.apply(
-    $,
-    // Seriously, why isn't there an Object.values()?
-    Object.keys(DeferredRequests).map(function(name) {
-      return DeferredRequests[name];
-    })
-  ).done(function() {
-    addFilenamesAsOptions(DeferredRequests.subtlepatterns.responseText,
-                          bgSubtlepattern);
-    addFilenamesAsOptions(DeferredRequests.nounproject.responseText,
-                          glyphNoun);
+  deferredRequests.done(function() {
     exportButton.click(function() {
       alert("To export the badge as an image, load this page in Firefox, " +
             "right-click on the badge, and select \"Save Image As...\".");
