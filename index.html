@@ -215,7 +215,7 @@ $(window).load(function() {
     }, function(err, canvas) {
       if (renderId != renderIdCounter) return;
       badgeHolder.empty();
-      if (!err) badgeHolder.append(canvas).trigger("badgechanged");
+      if (!err) badgeHolder.append(canvas);
     });
   };
 
