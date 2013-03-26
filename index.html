@@ -87,7 +87,7 @@ input.color {
           </label>
         </fieldset>
       </form>
-      <a id="badge-link" class="btn btn-primary btn-block">Link to this badge</a>
+      <a href="#sharing-modal" role="button" data-toggle="modal" class="btn btn-primary btn-block">Share this badge design</a>
       <button id="export-button" class="btn btn-block">Export badge image</button>
       <hr>
       <p class="muted"><small>When sharing or publishing your badge, please credit <a href="https://twitter.com/iamjessklein">Jessica Klein</a> for the <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a> badge ribbon, as well as any other additional sources that you draw from.</small></p>
@@ -97,6 +97,16 @@ input.color {
         <p class="muted">Loading&hellip;</p>
       </div>
     </div>
+  </div>
+</div>
+<div id="sharing-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="sharing-modal-label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="sharing-modal-label">Share This Badge Design</h3>
+  </div>
+  <div class="modal-body">
+    <p>Just copy the link below to share this badge design with others.</p>
+    <textarea class="input-block-level" id="badge-link" rows="5"></textarea>
   </div>
 </div>
 <script src="vendor/jquery.js"></script>
@@ -243,10 +253,14 @@ $(window).load(function() {
       badgeHolder.toggleClass("affix", shouldAffix);
     });
 
+    badgeLink.closest(".modal").on("shown", function() {
+      badgeLink.select().focus();
+    });
+
     startStateManager({
       onChange: function(state) {
         renderBadge();
-        badgeLink.attr("href", "?" + $.param(state));
+        badgeLink.val($("<a></a>").attr("href", "?"+$.param(state))[0].href);
       }
     });
   });
