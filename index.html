@@ -19,6 +19,15 @@ input.color {
 .radio-details {
   padding-left: 20px;
 }
+
+#badge-holder {
+  -moz-transition: opacity 2s;
+  -webkit-transition: opacity 2s;
+}
+
+#badge-holder.loading {
+  opacity: 0.25;
+}
 </style>
 <title>Chicago Badge Studio</title>
 <a href="https://github.com/toolness/chicago-badge-studio"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
@@ -84,7 +93,7 @@ input.color {
       <p class="muted"><small>When sharing or publishing your badge, please credit <a href="https://twitter.com/iamjessklein">Jessica Klein</a> for the <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a> badge ribbon, as well as any other additional sources that you draw from.</small></p>
     </div>
     <div class="span8">
-      <div id="badge-holder">
+      <div id="badge-holder" class="loading">
         <p class="muted">Loading&hellip;</p>
       </div>
     </div>
@@ -206,6 +215,7 @@ $(window).load(function() {
       glyph = Chibadge.coloredMask(glyph, '#' + glyphMaskColor.val());
     }
 
+    badgeHolder.addClass("loading");
     Chibadge.build({
       size: badgeSize,
       background: background,
@@ -214,6 +224,7 @@ $(window).load(function() {
       gloss: gloss[0].checked
     }, function(err, canvas) {
       if (renderId != renderIdCounter) return;
+      badgeHolder.removeClass("loading");
       badgeHolder.empty();
       if (!err) badgeHolder.append(canvas);
     });
