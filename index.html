@@ -15,6 +15,10 @@ input.color {
   padding: 3px;
   margin-bottom: 10px;
 }
+
+.radio-details {
+  padding-left: 20px;
+}
 </style>
 <title>Chicago Badge Studio</title>
 <a href="https://github.com/toolness/chicago-badge-studio"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
@@ -26,23 +30,42 @@ input.color {
       <form>
         <fieldset>
           <h4>Background</h4>
-          <label>Color</label>
-          <input id="bg-color" class="color" value="9E300E" data-validator="color">
-          <label>Subtle Pattern</label>
-          <select id="bg-subtlepattern" data-validator="select">
-            <option value="" selected>--</option>
-          </select>
-          <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">CC BY-SA 3.0</a> license.</small></p>
-          <label>URL</label>
-          <input id="bg-url" type="text" data-validator="url">
+          <label class="radio">
+            <input type="radio" name="bg" id="bg1" value="color" data-validator="radio" checked> Color
+          </label>
+          <div class="radio-details">
+            <input id="bg-color" class="color" value="9E300E" data-validator="color">
+          </div>
+          <label class="radio">
+            <input type="radio" name="bg" id="bg2" value="subtlepattern"> Subtle Pattern
+          </label>
+          <div class="radio-details">
+            <select id="bg-subtlepattern" data-validator="select"></select>
+            <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">CC BY-SA 3.0</a> license.</small></p>
+          </div>
+          <label class="radio">
+            <input type="radio" name="bg" id="bg3" value="url"> Custom image URL
+          </label>
+          <div class="radio-details">
+            <input id="bg-url" type="text" data-validator="url" placeholder="http://">
+          </div>
           <h4>Glyph</h4>
-          <label>Noun</label>
-          <select id="glyph-noun" data-validator="select">
-            <option value="" selected>--</option>
-          </select>
-          <p class="muted"><small>Nouns are courtesy <a href="http://nounproject.com/">nounproject.com</a>. Each noun has its own Creative Commons license.</small></p>
-          <label>URL</label>
-          <input id="glyph-url" type="text" data-validator="url">
+          <label class="radio">
+            <input type="radio" name="glyph" id="glyph1" value="none" data-validator="radio" checked> No glyph
+          </label>
+          <label class="radio">
+            <input type="radio" name="glyph" id="glyph2" value="noun"> Noun
+          </label>
+          <div class="radio-details">
+            <select id="glyph-noun" data-validator="select"></select>
+            <p class="muted"><small>Nouns are courtesy <a href="http://nounproject.com/">nounproject.com</a>. Each noun has its own Creative Commons license.</small></p>
+          </div>
+          <label class="radio">
+            <input type="radio" name="glyph" id="glyph3" value="url"> Custom image URL
+          </label>
+          <div class="radio-details">
+            <input id="glyph-url" type="text" data-validator="url" placeholder="http://">
+          </div>
           <label>Scaling</label>
           <input id="glyph-scale" type="text" value="1.0" data-validator="float">
           <label class="checkbox">
@@ -110,7 +133,9 @@ function addFilenamesAsOptions(textFile, selectElement) {
   });
 }
 
-$(function() {
+// We used to only wait for the DOM to be ready, but JSColor widgets don't
+// seem to be active until the page is fully loaded.
+$(window).load(function() {
   var renderIdCounter = 0;
   var badgeHolder = $("#badge-holder");
   var bgColor = $("#bg-color");
@@ -128,22 +153,24 @@ $(function() {
   var origBadgeHolderTop = badgeHolder.offset().top;
   var renderBadge = function() {
     var renderId = ++renderIdCounter;
-    var background;
-    var glyph;
-
-    if (Validation.isSafeUrl(bgUrl.val())) {
-      background = img(bgUrl.val());
-    } else if (bgSubtlepattern.val()) {
-      background = img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
-    } else {
-      background = '#' + bgColor.val();
-    }
-
-    if (Validation.isSafeUrl(glyphUrl.val())) {
-      glyph = img(glyphUrl.val());
-    } else if (glyphNoun.val()) {
-      glyph = img(BASE_NOUN_URL + glyphNoun.val());
-    }
+    var backgroundRadioHandlers = {
+      'color': function() { return '#' + bgColor.val(); },
+      'subtlepattern': function() {
+        return img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
+      },
+      'url': function() {
+        if (Validation.isSafeUrl(bgUrl.val())) return img(bgUrl.val());
+      }
+    };
+    var glyphRadioHandlers = {
+      'none': function() {},
+      'noun': function() { return img(BASE_NOUN_URL + glyphNoun.val()) },
+      'url': function() {
+        if (Validation.isSafeUrl(glyphUrl.val())) return img(glyphUrl.val());
+      }
+    };
+    var background = backgroundRadioHandlers[Validation.radioValue("bg")]();
+    var glyph = glyphRadioHandlers[Validation.radioValue("glyph")]();
 
     if (glyphMask[0].checked && glyph) {
       glyph = Chibadge.coloredMask(glyph, '#' + glyphMaskColor.val());

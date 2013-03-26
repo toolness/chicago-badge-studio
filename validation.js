@@ -21,7 +21,7 @@ var Validation = (function() {
     getState: function Validation_getState(form) {
       var values = {};
       eachValidator(form, function(validator) {
-        values[validator.el.id] = validator.get();
+        values[validator.el.name || validator.el.id] = validator.get();
       });
       return values;
     },
@@ -37,8 +37,8 @@ var Validation = (function() {
         form = null;
       }
       eachValidator(form, function(validator) {
-        if (validator.el.id in values)
-          validator.set(values[validator.el.id]);
+        var id = validator.el.name || validator.el.id;
+        if (id in values) validator.set(values[id]);
       });
     },
     // ## Validation.isSafeUrl(str)
@@ -47,6 +47,19 @@ var Validation = (function() {
     // http or https protocol.
     isSafeUrl: function Validation_isSafeUrl(str) {
       return /^https?:\/\//.test(str);
+    },
+    // ## Validation.radioValue([form], name)
+    //
+    // Returns the current value of the given radio button group in the
+    // given form.
+    //
+    // If form is not provided, document is used.
+    radioValue: function Validation_radioValue(form, name) {
+      if (!name) {
+        name = form;
+        form = document;
+      }
+      return form.querySelector('[name="' + name + '"]:checked').value;
     },
     // ## Validation.types
     //
@@ -126,6 +139,22 @@ var Validation = (function() {
       each(this.el, "option", function(option) {
         if (option.value == value) option.selected = true;
       });
+    }
+  });
+
+  // ## radio validator class
+  //
+  // This validator should be applied to only one of the radio buttons
+  // per group.
+  Validation.types.radio = validator({
+    get: function() {
+      return Validation.radioValue(this.el.form, this.el.name);
+    },
+    set: function(value) {
+      each(this.el.form, 'input[type="radio"]', function(radio) {
+        if (radio.name == this.el.name && radio.value == value)
+          radio.checked = true;
+      }, this);
     }
   });
 
