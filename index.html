@@ -92,22 +92,24 @@ input.color {
 </div>
 <script src="vendor/jquery.js"></script>
 <script>
-function addFilenamesAsOptions(url, selectElement) {
-  return $.get(url, function(textFile) {
-    textFile.split('\n').forEach(function(filename) {
-      if (!filename) return;
-      $('<option></option>')
-        .text(filename.split('.')[0].replace(/[_-]/g, ' '))
-        .attr("value", filename)
-        .appendTo(selectElement);
+var deferredRequests = (function() {
+  function addFilenamesAsOptions(url, selectElement) {
+    return $.get(url, function(textFile) {
+      textFile.split('\n').forEach(function(filename) {
+        if (!filename) return;
+        $('<option></option>')
+          .text(filename.split('.')[0].replace(/[_-]/g, ' '))
+          .attr("value", filename)
+          .appendTo(selectElement);
+      });
     });
-  });
-}
+  }
 
-var deferredRequests = $.when(
-  addFilenamesAsOptions("vendor/subtlepatterns.txt", "#bg-subtlepattern"),
-  addFilenamesAsOptions("vendor/nounproject.txt", "#glyph-noun")
-);
+  return $.when(
+    addFilenamesAsOptions("vendor/subtlepatterns.txt", "#bg-subtlepattern"),
+    addFilenamesAsOptions("vendor/nounproject.txt", "#glyph-noun")
+  );
+})();
 </script>
 <script src="vendor/jscolor/jscolor.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.js"></script>
