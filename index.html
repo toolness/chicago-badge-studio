@@ -133,6 +133,32 @@ function addFilenamesAsOptions(textFile, selectElement) {
   });
 }
 
+function startStateManager(options) {
+  var onChange = options.onChange || function() {};
+  var latestState = $.extend(Validation.getState(), queryObj());
+  var setState = function(newState, noPushState) {
+    if (Validation.areStatesSame(newState, latestState)) return;
+    latestState = newState;
+    Validation.setState(newState);
+    if (window.history.pushState && !noPushState)
+      window.history.pushState(newState, "", "?" + $.param(newState));
+    onChange(newState);
+  };
+
+  $(document.body).on("change", "input, select", function() {
+    setState(Validation.getState());
+  });
+
+  $(window).on("popstate", function(event) {
+    setState(event.originalEvent.state, true);
+  });
+
+  Validation.setState(latestState);
+  if (window.history.replaceState)
+    window.history.replaceState(latestState, "", null);
+  onChange(latestState);
+}
+
 // We used to only wait for the DOM to be ready, but JSColor widgets don't
 // seem to be active until the page is fully loaded.
 $(window).load(function() {
@@ -200,7 +226,6 @@ $(window).load(function() {
                           bgSubtlepattern);
     addFilenamesAsOptions(DeferredRequests.nounproject.responseText,
                           glyphNoun);
-    $(document.body).on("change", "input, select", renderBadge);
     exportButton.click(function() {
       alert("To export the badge as an image, load this page in Firefox, " +
             "right-click on the badge, and select \"Save Image As...\".");
@@ -213,31 +238,12 @@ $(window).load(function() {
       badgeHolder.toggleClass("affix", shouldAffix);
     });
 
-    $(window).on("popstate", function(event) {
-      var state = event.originalEvent.state;
-      if (state && !Validation.areStatesSame(state, Validation.getState())) {
-        Validation.setState(state);
+    startStateManager({
+      onChange: function(state) {
         renderBadge();
+        badgeLink.attr("href", "?" + $.param(state));
       }
     });
-    badgeHolder.on("badgechanged", function() {
-      var newState = Validation.getState();
-      var newSearchString = "?" + $.param(newState);
-
-      badgeLink.attr("href", newSearchString);
-      if (window.history.pushState &&
-          !Validation.areStatesSame(newState, querystringState()))
-        window.history.pushState(newState, "", newSearchString);
-    });
-
-    var querystringState = (function(baseState) {
-      return function() { return $.extend({}, baseState, queryObj()); }
-    })(Validation.getState());
-
-    Validation.setState(querystringState());
-    if (window.history.replaceState)
-      window.history.replaceState(Validation.getState(), "", null);
-    renderBadge();
   });
 });
 </script>
