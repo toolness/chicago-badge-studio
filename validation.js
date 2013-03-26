@@ -41,6 +41,16 @@ var Validation = (function() {
         if (id in values) validator.set(values[id]);
       });
     },
+    // ## Validation.areStatesSame(a, b)
+    //
+    // Compare two state objects and return true if they represent the
+    // same state, false otherwise. Assumes that the state objects 
+    // have the same number of keys.
+    areStatesSame: function Validation_areStatesSame(a, b) {
+      for (var name in a)
+        if (a[name] !== b[name]) return false;
+      return true;
+    },
     // ## Validation.isSafeUrl(str)
     //
     // Returns whether the given string is a "safe" URL, i.e. uses the

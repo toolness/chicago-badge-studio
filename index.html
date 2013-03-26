@@ -185,10 +185,8 @@ $(window).load(function() {
     }, function(err, canvas) {
       if (renderId != renderIdCounter) return;
       badgeHolder.empty();
-      if (!err) badgeHolder.append(canvas);
+      if (!err) badgeHolder.append(canvas).trigger("badgechanged");
     });
-
-    badgeLink.attr("href", "?" + $.param(Validation.getState()));
   };
 
   $.when.apply(
@@ -215,7 +213,30 @@ $(window).load(function() {
       badgeHolder.toggleClass("affix", shouldAffix);
     });
 
-    Validation.setState(queryObj());
+    $(window).on("popstate", function(event) {
+      var state = event.originalEvent.state;
+      if (state && !Validation.areStatesSame(state, Validation.getState())) {
+        Validation.setState(state);
+        renderBadge();
+      }
+    });
+    badgeHolder.on("badgechanged", function() {
+      var newState = Validation.getState();
+      var newSearchString = "?" + $.param(newState);
+
+      badgeLink.attr("href", newSearchString);
+      if (window.history.pushState &&
+          !Validation.areStatesSame(newState, querystringState()))
+        window.history.pushState(newState, "", newSearchString);
+    });
+
+    var querystringState = (function(baseState) {
+      return function() { return $.extend({}, baseState, queryObj()); }
+    })(Validation.getState());
+
+    Validation.setState(querystringState());
+    if (window.history.replaceState)
+      window.history.replaceState(Validation.getState(), "", null);
     renderBadge();
   });
 });
