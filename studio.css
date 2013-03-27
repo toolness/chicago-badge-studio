@@ -1,0 +1,26 @@
+body {
+  margin-bottom: 10px;
+}
+
+.affix {
+  top: 10px;
+}
+
+input.color {
+  border: none;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+
+.radio-details {
+  padding-left: 20px;
+}
+
+#badge-holder {
+  -moz-transition: opacity 2s;
+  -webkit-transition: opacity 2s;
+}
+
+#badge-holder.loading {
+  opacity: 0.25;
+}
