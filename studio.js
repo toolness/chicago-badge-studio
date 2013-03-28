@@ -131,13 +131,6 @@ $(window).load(function() {
   };
 
   deferredRequests.done(function() {
-    // We used to use bootstrap's $.affix() for this, but it appears to be
-    // buggy.
-    $(window).on("scroll", function() {
-      var shouldAffix = $(window).scrollTop() > origBadgeHolderTop
-      badgeHolder.toggleClass("affix", shouldAffix);
-    });
-
     badgeLink.closest(".modal").on("shown", function() {
       badgeLink.select().focus();
     });
