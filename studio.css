@@ -119,8 +119,9 @@ button.btn.btn-info:active {
 
 input.color {
   border: none;
-  padding: 3px;
+  padding: 4px 6px;
   margin-bottom: 10px;
+  border-radius: 4px;
 }
 
 .radio-details {
