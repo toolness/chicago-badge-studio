@@ -50,10 +50,19 @@ a, a:hover {
   color: rgba(255, 255, 255, 0.75);
 }
 
-.badge-maker {
+.row.badge-maker {
   border-radius: 10px;
   padding-top: 10px;
   background: rgba(255, 255, 255, 0.1);
+}
+
+.row.sharing-options {
+  margin-top: 10px;
+}
+
+.row.sharing-options .btn {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .affix {
