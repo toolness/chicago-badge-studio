@@ -142,6 +142,7 @@ input.color {
 }
 
 #badge-holder {
+  min-height: 600px;
   -moz-transition: opacity 2s;
   -webkit-transition: opacity 2s;
 }
