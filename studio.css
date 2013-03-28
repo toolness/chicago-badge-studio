@@ -1,9 +1,120 @@
 body {
   margin-bottom: 10px;
+  background: url(http://chicagosummeroflearning.org/img/background-chalkboard-green.jpg) no-repeat center center;
+  background-size: cover;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.modal {
+  color: #283d51;
+}
+
+.modal a, .modal a:hover {
+  color: #3696df;
+}
+
+a, a:hover {
+  color: #30485f;
+}
+
+.nav li.active a {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.nav li.active a:hover,
+.nav li.active a:active,
+.nav li.active a:focus {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.nav li a:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-family: 'Amatic SC', cursive;
+  font-weight: normal;
+}
+
+.header h2 {
+  font-size: 16px;
+  margin-top: -10px;
+}
+
+.muted {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.badge-maker {
+  border-radius: 10px;
+  padding-top: 10px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .affix {
   top: 10px;
+}
+
+a.btn,
+a.btn:hover,
+a.btn:active,
+button.btn,
+button.btn:hover,
+button.btn:active {
+  text-shadow: none;
+  box-shadow: none;
+  color: white;
+  border: none;
+}
+
+a.btn,
+button.btn {
+  background: #30485f;
+}
+
+a.btn:hover,
+button.btn:hover {
+  background: #5a6c7f;
+}
+
+a.btn:active,
+button.btn:active {
+  background: #283d51;
+}
+
+a.btn.btn-primary,
+button.btn.btn-primary {
+  background: #3696df;
+}
+
+a.btn.btn-primary:hover,
+button.btn.btn-primary:hover {
+  background: #45abe5;
+}
+
+a.btn.btn-primary:active,
+button.btn.btn-primary:active {
+  background: #2d7fbd;
+}
+
+a.btn.btn-info,
+button.btn.btn-info {
+  background: #60c49f;
+}
+
+a.btn.btn-info:hover,
+button.btn.btn-info:hover {
+  background: #66d1b4;
+}
+
+a.btn.btn-info:active,
+button.btn.btn-info:active {
+  background: #50a789;
 }
 
 input.color {

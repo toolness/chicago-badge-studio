@@ -1,69 +1,80 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link href='http://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="studio.css">
 <title>Chicago Badge Studio</title>
 <a href="https://github.com/toolness/chicago-badge-studio"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 <div class="container">
-  <h1>Chicago Badge Studio</h1>
-  <p>Design your badge image for the <a href="http://chicagosummeroflearning.org/">Chicago Summer of Learning</a> below.</p>
-  <div class="row">
+  <div class="header">
+    <h1>Chicago Summer of Learning</h1>
+    <h2>Badge Studio</h2>
+  </div>
+  <div class="badge-maker row">
     <div class="span4">
       <form autocomplete="off">
+        <ul class="nav nav-pills">
+          <li class="active"><a href="#bg" data-toggle="tab">Background</a></li>
+          <li><a href="#glyph" data-toggle="tab">Glyph</a></li>
+          <li><a href="#other" data-toggle="tab">Other</a></li>
+        </ul>
         <fieldset>
-          <h4>Background</h4>
-          <label class="radio">
-            <input type="radio" name="bg" id="bg1" value="color" data-validator="radio" checked> Color
-          </label>
-          <div class="radio-details">
-            <input id="bg-color" class="color" value="9E300E" data-validator="color">
-          </div>
-          <label class="radio">
-            <input type="radio" name="bg" id="bg2" value="subtlepattern"> Subtle Pattern
-          </label>
-          <div class="radio-details">
-            <select id="bg-subtlepattern" data-validator="select"></select>
-            <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">CC BY-SA 3.0</a> license.</small></p>
-          </div>
-          <label class="radio">
-            <input type="radio" name="bg" id="bg3" value="url"> Custom background image
-          </label>
-          <div class="radio-details">
-            <input id="bg-url" type="text" data-validator="url" placeholder="http://">
-          </div>
-          <h4>Glyph</h4>
-          <label class="radio">
-            <input type="radio" name="glyph" id="glyph1" value="none" data-validator="radio" checked> No glyph
-          </label>
-          <label class="radio">
-            <input type="radio" name="glyph" id="glyph2" value="noun"> Noun
-          </label>
-          <div class="radio-details">
-            <select id="glyph-noun" data-validator="select"></select>
-            <p class="muted"><small>Nouns are courtesy <a href="http://nounproject.com/">nounproject.com</a>. Each noun has its own Creative Commons license.</small></p>
-          </div>
-          <label class="radio">
-            <input type="radio" name="glyph" id="glyph3" value="url"> Custom glyph image
-          </label>
-          <div class="radio-details">
-            <input id="glyph-url" type="text" data-validator="url" placeholder="http://">
-          </div>
-          <label>Scaling</label>
-          <input id="glyph-scale" type="text" value="1.0" data-validator="float">
-          <label class="checkbox">
-            <input id="glyph-mask" type="checkbox" data-validator="boolean" checked> Apply mask color
-          </label>
-          <input id="glyph-mask-color" class="color" value="000000" data-validator="color">
-          <h4>Other Options</h4>
-          <label class="checkbox">
-            <input id="gloss" type="checkbox" data-validator="boolean" checked> Glossy
-          </label>
+          <div class="tab-content">
+            <div class="tab-pane active" id="bg">
+              <label class="radio">
+                <input type="radio" name="bg" id="bg1" value="color" data-validator="radio" checked> Color
+              </label>
+              <div class="radio-details">
+                <input id="bg-color" class="color" value="E9425E" data-validator="color">
+              </div>
+              <label class="radio">
+                <input type="radio" name="bg" id="bg2" value="subtlepattern"> Subtle Pattern
+              </label>
+              <div class="radio-details">
+                <select id="bg-subtlepattern" data-validator="select"></select>
+                <p class="muted"><small>Subtle Patterns are courtesy <a href="http://subtlepatterns.com/">subtlepatterns.com</a>, and are licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">CC BY-SA 3.0</a> license.</small></p>
+              </div>
+              <label class="radio">
+                <input type="radio" name="bg" id="bg3" value="url"> Custom background image
+              </label>
+              <div class="radio-details">
+                <input id="bg-url" type="text" data-validator="url" placeholder="http://">
+              </div>
+            </div>
+            <div class="tab-pane" id="glyph">
+              <label class="radio">
+                <input type="radio" name="glyph" id="glyph1" value="none" data-validator="radio" checked> No glyph
+              </label>
+              <label class="radio">
+                <input type="radio" name="glyph" id="glyph2" value="noun"> Noun
+              </label>
+              <div class="radio-details">
+                <select id="glyph-noun" data-validator="select"></select>
+                <p class="muted"><small>Nouns are courtesy <a href="http://nounproject.com/">nounproject.com</a>. Each noun has its own Creative Commons license.</small></p>
+              </div>
+              <label class="radio">
+                <input type="radio" name="glyph" id="glyph3" value="url"> Custom glyph image
+              </label>
+              <div class="radio-details">
+                <input id="glyph-url" type="text" data-validator="url" placeholder="http://">
+              </div>
+              <label>Scaling</label>
+              <input id="glyph-scale" type="text" value="1.0" data-validator="float">
+              <label class="checkbox">
+                <input id="glyph-mask" type="checkbox" data-validator="boolean" checked> Apply mask color
+              </label>
+              <input id="glyph-mask-color" class="color" value="000000" data-validator="color">
+            </div>
+            <div class="tab-pane" id="other">
+              <label class="checkbox">
+                <input id="gloss" type="checkbox" data-validator="boolean" checked> Glossy
+              </label>
+            </div>
         </fieldset>
       </form>
       <a href="#sharing-modal" role="button" data-toggle="modal" class="btn btn-primary btn-block">Share badge design</a>
-      <a href="#export-modal" role="button" data-toggle="modal" class="btn btn-block">Export badge image</a>
-      <hr>
-      <p class="muted"><small>When sharing or publishing your badge, please credit <a href="https://twitter.com/iamjessklein">Jessica Klein</a> for the <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a> badge ribbon, as well as any other additional sources that you draw from.</small></p>
+      <a href="#export-modal" role="button" data-toggle="modal" class="btn btn-info btn-block">Export badge image</a>
     </div>
     <div class="span8">
       <div id="badge-holder" class="loading">
