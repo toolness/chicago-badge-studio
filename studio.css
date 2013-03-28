@@ -4,6 +4,7 @@ body {
   background-size: cover;
   color: white;
   font-family: 'Open Sans', sans-serif;
+  margin-bottom: 0;
 }
 
 .modal {
@@ -58,6 +59,7 @@ a, a:hover {
 
 .row.sharing-options {
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .row.sharing-options .btn {
@@ -144,4 +146,38 @@ input.color {
 
 #badge-holder.loading {
   opacity: 0.25;
+}
+
+footer {
+  background: url(http://chicagosummeroflearning.org/img/background-chalkboard-black.jpg?1362608262) no-repeat center center;
+  background-size: cover;
+  padding-top: 30px;
+  border-top: 6px solid #30485f;
+}
+
+footer img.csol-logo {
+  width: 100%;
+}
+
+footer .sponsors {
+  padding-top: 50px;
+}
+
+footer .sponsors img {
+  width: 25%;
+}
+
+footer .sponsors img:not(:first-child) {
+  padding-left: 20px;
+}
+
+footer .row.final {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-size: smaller;
+  text-align: center;
+}
+
+footer .row.final a {
+  color: inherit;
 }
