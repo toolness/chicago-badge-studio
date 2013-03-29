@@ -7,7 +7,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node_modules/.bin/r.js -o mainConfigFile=require-config.js paths.requireLib=vendor/require include=requireLib name=studio out=studio.min.js"
+    "start": "node_modules/.bin/r.js -o mainConfigFile=require-config.js paths.requireLib=vendor/require include=requireLib,filepicker.io name=studio out=studio.min.js"
   },
   "repository": {
     "type": "git",

@@ -16,7 +16,7 @@ define(function(require) {
   var BASE_NOUN_URL = BASE_ASSET_URL + 'nounproject/';
 
   // List of URL prefixes that we know support CORS. This array can be
-  // modified by bookmarklets, etc.
+  // modified.
   var crossOriginImageUrls = [BASE_ASSET_URL];
 
   // Based on http://stackoverflow.com/a/647272.
@@ -153,11 +153,15 @@ define(function(require) {
       $(".success.result").show();
     });
 
-    // Export this for bookmarklets, etc.
-    window.renderBadge = renderBadge;
+    return {
+      crossOriginImageUrls: crossOriginImageUrls,
+      renderBadge: renderBadge,
+      el: document.body
+    };
   }
 
   return {
+    _instance: null,
     start: function() {
       function addFilenamesAsOptions(textFile, selectElement) {
         textFile.split('\n').forEach(function(filename) {
@@ -169,20 +173,24 @@ define(function(require) {
         });
       }
 
-      $(mainHtml).appendTo(document.body);
-      $(modalsHtml).appendTo(document.body);
-      $(footerHtml).appendTo(document.body);
-      addFilenamesAsOptions(subtlepatternsTxt, "#bg-subtlepattern");
-      addFilenamesAsOptions(nounprojectTxt, "#glyph-noun");
+      if (!this._instance) {
+        $(mainHtml).appendTo(document.body);
+        $(modalsHtml).appendTo(document.body);
+        $(footerHtml).appendTo(document.body);
+        addFilenamesAsOptions(subtlepatternsTxt, "#bg-subtlepattern");
+        addFilenamesAsOptions(nounprojectTxt, "#glyph-noun");
 
-      // For optimized builds, some libraries won't be able to auto-detect
-      // where their assets are deployed, so we need to manually configure
-      // them.
-      Chibadge.baseUrl = 'chibadge/';
-      jscolor.dir = 'vendor/jscolor/';
+        // For optimized builds, some libraries won't be able to auto-detect
+        // where their assets are deployed, so we need to manually configure
+        // them.
+        Chibadge.baseUrl = 'chibadge/';
+        jscolor.dir = 'vendor/jscolor/';
 
-      jscolor.init();
-      start();
+        jscolor.init();
+        this._instance = start();
+      }
+
+      return this._instance;
     }
   };
 });
