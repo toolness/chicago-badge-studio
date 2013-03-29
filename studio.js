@@ -59,6 +59,13 @@ function startStateManager(options) {
   };
 
   $(document.body).on("change", "input, select", function() {
+    var radioDetails = $(this).closest(".radio-details");
+    if (radioDetails.length) {
+      // If the user interacts with any widgets in a radio button's details,
+      // select the radio button too.
+      var radio = radioDetails.prev("label").find('input[type="radio"]');
+      if (radio.length) radio[0].checked = true;
+    }
     setState(Validation.getState());
   });
 
