@@ -1,3 +1,5 @@
+@import url(vendor/bootstrap/css/bootstrap.css);
+
 @font-face {
   font-family: 'Amatic SC';
   src: url('font/amatic/AmaticSC-Regular-webfont.eot');

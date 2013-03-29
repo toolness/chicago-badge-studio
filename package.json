@@ -1,0 +1,18 @@
+{
+  "name": "chicago-badge-studio",
+  "version": "0.0.1",
+  "description": "Badge image creation tool for Chicago Summer of Learning.",
+  "dependencies": {
+    "requirejs": "2.1.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node_modules/.bin/r.js -o mainConfigFile=require-config.js name=studio out=studio.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/toolness/chicago-badge-studio.git"
+  },
+  "author": "Atul Varma <varmaa@gmail.com>",
+  "license": "BSD"
+}
