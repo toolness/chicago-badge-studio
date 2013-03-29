@@ -11,13 +11,10 @@ define(function(require) {
   var subtlepatternsTxt = require('text!vendor/subtlepatterns.txt');
   var nounprojectTxt = require('text!vendor/nounproject.txt');
 
-  var BASE_ASSET_URL = "http://labs.toolness.com/temp/";
-  var BASE_SUBTLEPATTERN_URL = BASE_ASSET_URL + 'subtlepatterns/';
-  var BASE_NOUN_URL = BASE_ASSET_URL + 'nounproject/';
-
-  // List of URL prefixes that we know support CORS. This array can be
-  // modified.
-  var crossOriginImageUrls = [BASE_ASSET_URL];
+  var DEFAULT_BASE_ASSET_URL = "http://labs.toolness.com/temp/";
+  var DEFAULT_SUBTLEPATTERN_URL = DEFAULT_BASE_ASSET_URL + 'subtlepatterns/';
+  var DEFAULT_NOUN_URL = DEFAULT_BASE_ASSET_URL + 'nounproject/';
+  var DEFAULT_CROSS_ORIGIN_IMAGE_URLS = [DEFAULT_BASE_ASSET_URL];
 
   // Based on http://stackoverflow.com/a/647272.
   function queryObj() {
@@ -29,15 +26,6 @@ define(function(require) {
     });
 
     return result;
-  }
-
-  function img(src) {
-    var img = document.createElement("img");
-    crossOriginImageUrls.forEach(function(url) {
-      if (src.indexOf(url) == 0) img.crossOrigin = "anonymous";
-    });
-    img.setAttribute("src", src);
-    return img;
   }
 
   function startStateManager(options) {
@@ -73,7 +61,7 @@ define(function(require) {
     onChange(latestState);
   }
 
-  function start() {
+  function start(options) {
     var renderIdCounter = 0;
     var badgeHolder = $("#badge-holder");
     var bgColor = $("#bg-color");
@@ -87,14 +75,28 @@ define(function(require) {
     var gloss = $("#gloss");
     var exportModal = $("#export-modal");
     var badgeLink = $("#badge-link");
+    var subtlepatternUrl = options.subtlepatternUrl ||
+                           DEFAULT_SUBTLEPATTERN_URL;
+    var nounUrl = options.nounUrl || DEFAULT_NOUN_URL;
+    var crossOriginImageUrls = DEFAULT_CROSS_ORIGIN_IMAGE_URLS.concat(
+      options.crossOriginImageUrls || []
+    );
     var badgeSize = badgeHolder.width() - 20;
     var origBadgeHolderTop = badgeHolder.offset().top;
+    var img = function(src) {
+      var img = document.createElement("img");
+      crossOriginImageUrls.forEach(function(url) {
+        if (src.indexOf(url) == 0) img.crossOrigin = "anonymous";
+      });
+      img.setAttribute("src", src);
+      return img;
+    };
     var renderBadge = function(cb) {
       var renderId = ++renderIdCounter;
       var backgroundRadioHandlers = {
         'color': function() { return '#' + bgColor.val(); },
         'subtlepattern': function() {
-          return img(BASE_SUBTLEPATTERN_URL + bgSubtlepattern.val());
+          return img(subtlepatternUrl + bgSubtlepattern.val());
         },
         'url': function() {
           if (Validation.isSafeUrl(bgUrl.val())) return img(bgUrl.val());
@@ -102,7 +104,7 @@ define(function(require) {
       };
       var glyphRadioHandlers = {
         'none': function() {},
-        'noun': function() { return img(BASE_NOUN_URL + glyphNoun.val()) },
+        'noun': function() { return img(nounUrl + glyphNoun.val()) },
         'url': function() {
           if (Validation.isSafeUrl(glyphUrl.val())) return img(glyphUrl.val());
         }
@@ -162,7 +164,7 @@ define(function(require) {
 
   return {
     _instance: null,
-    start: function() {
+    start: function(options) {
       function addFilenamesAsOptions(textFile, selectElement) {
         textFile.split('\n').forEach(function(filename) {
           if (!filename) return;
@@ -187,8 +189,9 @@ define(function(require) {
         jscolor.dir = 'vendor/jscolor/';
 
         jscolor.init();
-        this._instance = start();
-      }
+        this._instance = start(options || {});
+      } else
+        throw new Error("Studio objects are currently singletons");
 
       return this._instance;
     }
