@@ -5,7 +5,7 @@ body {
 }
 
 .main {
-  background: url(http://chicagosummeroflearning.org/img/background-chalkboard-green.jpg) no-repeat center center;
+  background: url(img/background-chalkboard-green.jpg) no-repeat center center;
   background-size: cover;
 }
 
@@ -148,7 +148,7 @@ input.color {
 }
 
 footer {
-  background: url(http://chicagosummeroflearning.org/img/background-chalkboard-black.jpg?1362608262) no-repeat center center;
+  background: url(img/background-chalkboard-black.jpg) no-repeat center center;
   background-size: cover;
   padding-top: 30px;
   border-top: 6px solid #30485f;
