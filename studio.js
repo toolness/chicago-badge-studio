@@ -93,6 +93,7 @@ $(window).load(function() {
   var glyphMask = $("#glyph-mask");
   var glyphMaskColor = $("#glyph-mask-color");
   var gloss = $("#gloss");
+  var exportModal = $("#export-modal");
   var badgeLink = $("#badge-link");
   var badgeSize = badgeHolder.width() - 20;
   var origBadgeHolderTop = badgeHolder.offset().top;
@@ -147,6 +148,18 @@ $(window).load(function() {
         renderBadge();
         badgeLink.val($("<a></a>").attr("href", "?"+$.param(state))[0].href);
       }
+    });
+
+    exportModal.on('show', function() {
+      $(".result", this).hide();
+      try {
+        var url = $("canvas", badgeHolder)[0].toDataURL();
+      } catch (e) {
+        $(".failure.result").show();
+        return;
+      }
+      $("img.export", this).attr("src", url);
+      $(".success.result").show();
     });
 
     // Export this for bookmarklets, etc.

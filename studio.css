@@ -184,3 +184,7 @@ footer .row.final {
 footer .row.final a {
   color: inherit;
 }
+
+img.export {
+  width: 64px;
+}
