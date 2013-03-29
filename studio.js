@@ -79,9 +79,7 @@ function startStateManager(options) {
   onChange(latestState);
 }
 
-// We used to only wait for the DOM to be ready, but JSColor widgets don't
-// seem to be active until the page is fully loaded.
-$(window).load(function() {
+$(window).ready(function() {
   var renderIdCounter = 0;
   var badgeHolder = $("#badge-holder");
   var bgColor = $("#bg-color");
@@ -138,6 +136,7 @@ $(window).load(function() {
     });
   };
 
+  jscolor.init();
   deferredRequests.done(function() {
     badgeLink.closest(".modal").on("shown", function() {
       badgeLink.select().focus();
