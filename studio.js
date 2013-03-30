@@ -4,9 +4,9 @@ define(function(require) {
   var Chibadge = require('chibadge');
   var jscolor = require('jscolor');
 
-  var mainHtml = require('text!studio-main.html');
-  var modalsHtml = require('text!studio-modals.html');
-  var footerHtml = require('text!studio-footer.html');
+  var mainHtml = require('text!template/main.html');
+  var modalsHtml = require('text!template/modals.html');
+  var footerHtml = require('text!template/footer.html');
 
   var subtlepatternsTxt = require('text!vendor/subtlepatterns.txt');
   var nounprojectTxt = require('text!vendor/nounproject.txt');
