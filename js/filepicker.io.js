@@ -12,6 +12,7 @@ define(["jquery-bootstrap"], function($) {
 
     var script = document.createElement("script");
     var exportButton = $('a[href="#export-modal"]', studio.el);
+    var exportModal = $('#export-modal', studio.el);
 
     script.onload = function() {
       filepicker.setKey(apiKey);
@@ -41,7 +42,10 @@ define(["jquery-bootstrap"], function($) {
         var done = function(errorMsg) {
           exportButton.button('reset');
           if (fpfileToDelete) filepicker.remove(fpfileToDelete);
-          if (errorMsg) alert(errorMsg);
+          if (errorMsg) {
+            if (window.console) window.console.error(errorMsg);
+            exportModal.modal('show');
+          }
         };
 
         exportButton.button('loading');
