@@ -75,6 +75,7 @@ define(function(require) {
     var gloss = $("#gloss");
     var exportModal = $("#export-modal");
     var badgeLink = $("#badge-link");
+    var badgeForm = $(".badge-maker form");
     var subtlepatternUrl = options.subtlepatternUrl ||
                            DEFAULT_SUBTLEPATTERN_URL;
     var nounUrl = options.nounUrl || DEFAULT_NOUN_URL;
@@ -142,6 +143,14 @@ define(function(require) {
         badgeLink.val($("<a></a>").attr("href", "?"+$.param(state))[0].href);
       }
     });
+
+    // We don't want browsers to automatically click the first
+    // button they find when the user presses enter in our form, so we'll
+    // put an invisible submit button here to capture and eat them.
+    badgeForm
+      .prepend($('<input type="submit">').css({position: 'absolute',
+                                               left: '-9999px'}))
+      .submit(function() { return false; });
 
     exportModal.on('show', function() {
       $(".result", this).hide();
