@@ -35,6 +35,7 @@ define(["jquery-bootstrap"], function($) {
           });
           return false;
         }).insertAfter(this);
+        button.wrap('<p></p>');
       });
       exportButton.attr("data-loading-text", "Exporting...");
       exportButton.click(function() {
