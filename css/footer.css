@@ -1,0 +1,37 @@
+footer {
+  background: url(../img/background-chalkboard-black.jpg) no-repeat center center;
+  background-size: cover;
+  padding-top: 30px;
+  border-top: 6px solid #30485f;
+}
+
+footer img.csol-logo {
+  width: 100%;
+}
+
+footer .sponsors {
+  padding-top: 50px;
+}
+
+footer .sponsors img {
+  width: 25%;
+}
+
+footer .sponsors img:not(:first-child) {
+  padding-left: 20px;
+}
+
+footer .row.final {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-size: smaller;
+  text-align: center;
+}
+
+footer .row.final a {
+  color: inherit;
+}
+
+img.export {
+  width: 64px;
+}

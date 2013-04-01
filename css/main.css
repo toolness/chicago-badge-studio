@@ -1,0 +1,55 @@
+.main {
+  background: url(../img/background-chalkboard-green.jpg) no-repeat center center;
+  background-size: cover;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-family: 'Amatic SC', cursive;
+  font-weight: normal;
+}
+
+.header h2 {
+  font-size: 16px;
+  margin-top: -10px;
+}
+
+.row.badge-maker {
+  border-radius: 10px;
+  padding-top: 10px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.row.sharing-options {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.row.sharing-options .btn {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+input.color {
+  border: none;
+  padding: 4px 6px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.radio-details {
+  padding-left: 20px;
+}
+
+#badge-holder {
+  min-height: 600px;
+  -moz-transition: opacity 2s;
+  -webkit-transition: opacity 2s;
+}
+
+#badge-holder.loading {
+  opacity: 0.25;
+}

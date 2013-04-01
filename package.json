@@ -6,9 +6,6 @@
     "requirejs": "2.1.5"
   },
   "devDependencies": {},
-  "scripts": {
-    "start": "node_modules/.bin/r.js -o mainConfigFile=js/require-config.js baseUrl=js paths.requireLib=../vendor/require include=requireLib,filepicker.io name=studio out=js/studio.min.js"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/toolness/chicago-badge-studio.git"

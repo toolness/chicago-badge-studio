@@ -1,0 +1,125 @@
+@font-face {
+  font-family: 'Amatic SC';
+  src: url('font/amatic/AmaticSC-Regular-webfont.eot');
+  src: url('font/amatic/AmaticSC-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('font/amatic/AmaticSC-Regular-webfont.woff') format('woff'),
+       url('font/amatic/AmaticSC-Regular-webfont.ttf') format('truetype'),
+       url('font/amatic/AmaticSC-Regular-webfont.svg#AmaticSCRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('font/open-sans/OpenSans-Regular-webfont.eot');
+  src: url('font/open-sans/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('font/open-sans/OpenSans-Regular-webfont.woff') format('woff'),
+       url('font/open-sans/OpenSans-Regular-webfont.ttf') format('truetype'),
+       url('font/open-sans/OpenSans-Regular-webfont.svg#OpenSansRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('font/open-sans/OpenSans-Italic-webfont.eot');
+  src: url('font/open-sans/OpenSans-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('font/open-sans/OpenSans-Italic-webfont.woff') format('woff'),
+       url('font/open-sans/OpenSans-Italic-webfont.ttf') format('truetype'),
+       url('font/open-sans/OpenSans-Italic-webfont.svg#OpenSansItalic') format('svg');
+  font-weight: normal;
+  font-style: italic;
+}
+
+body {
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+.modal {
+  color: #283d51;
+}
+
+.modal a, .modal a:hover {
+  color: #3696df;
+}
+
+a, a:hover {
+  color: #30485f;
+}
+
+.muted {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.nav li.active a {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.nav li.active a:hover,
+.nav li.active a:active,
+.nav li.active a:focus {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.nav li a:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+a.btn,
+a.btn:hover,
+a.btn:active,
+button.btn,
+button.btn:hover,
+button.btn:active {
+  text-shadow: none;
+  box-shadow: none;
+  color: white;
+  border: none;
+}
+
+a.btn,
+button.btn {
+  background: #30485f;
+}
+
+a.btn:hover,
+button.btn:hover {
+  background: #5a6c7f;
+}
+
+a.btn:active,
+button.btn:active {
+  background: #283d51;
+}
+
+a.btn.btn-primary,
+button.btn.btn-primary {
+  background: #3696df;
+}
+
+a.btn.btn-primary:hover,
+button.btn.btn-primary:hover {
+  background: #45abe5;
+}
+
+a.btn.btn-primary:active,
+button.btn.btn-primary:active {
+  background: #2d7fbd;
+}
+
+a.btn.btn-info,
+button.btn.btn-info {
+  background: #60c49f;
+}
+
+a.btn.btn-info:hover,
+button.btn.btn-info:hover {
+  background: #66d1b4;
+}
+
+a.btn.btn-info:active,
+button.btn.btn-info:active {
+  background: #50a789;
+}
