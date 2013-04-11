@@ -9,7 +9,7 @@ define(function(require) {
   var footerHtml = require('text!template/footer.html');
 
   var subtlepatternsTxt = require('text!vendor/subtlepatterns.txt');
-  var nounprojectTxt = require('text!vendor/nounproject.txt');
+  var nounprojectTxt = require('text!vendor/nounproject-for-kids.txt');
 
   var DEFAULT_BASE_ASSET_URL = "http://labs.toolness.com/temp/";
   var DEFAULT_SUBTLEPATTERN_URL = DEFAULT_BASE_ASSET_URL + 'subtlepatterns/';
