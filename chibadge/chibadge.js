@@ -1,9 +1,6 @@
 var Chibadge = (function() {
   var Chibadge = {
     // ## Chibadge Constants
-    //
-    // Unless otherwise noted, all of the length measurements here are
-    // in pixels.
 
     // The URL of the hex mask for the badge, relative to the chibadge dir.
     MASK_URL: 'hex-mask.png',
@@ -34,7 +31,7 @@ var Chibadge = (function() {
     // Options:
     //
     //   size:
-    //     The length of each side of the canvas, in pixels (default is 1077).
+    //     The length of each side of the canvas, in pixels.
     //
     //   background:
     //     The background color or image pattern to repeat. Should be a CSS 
