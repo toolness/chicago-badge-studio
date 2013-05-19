@@ -5,15 +5,11 @@ var Chibadge = (function() {
     // Unless otherwise noted, all of the length measurements here are
     // in pixels.
 
-    // The native length of each side of the badge, when it's not being
-    // scaled in any way.
-    NATIVE_BADGE_SIZE: 1077,
-
     // The URL of the hex mask for the badge, relative to the chibadge dir.
     MASK_URL: 'hex-mask.png',
 
     // The amount of vertical and horizontal padding for the mask on the
-    // badge image, at the badge's native size.
+    // badge image, at the badge's native size (when it's not being scaled).
     MASK_PADDING: 21,
 
     // The URL of the ribbon for the badge, relative to the chibadge dir.
@@ -72,13 +68,6 @@ var Chibadge = (function() {
     // when the canvas is rendered, or if an error occurred.
 
     build: function(options, cb) {
-      var FULL_WIDTH = options.size || this.NATIVE_BADGE_SIZE;
-      var FULL_HEIGHT = FULL_WIDTH;
-      var SCALE_FACTOR = FULL_WIDTH / this.NATIVE_BADGE_SIZE;
-      var MASK_PADDING = this.MASK_PADDING * SCALE_FACTOR;
-      var RIBBON_X = this.RIBBON_POS.x * SCALE_FACTOR;
-      var RIBBON_Y = this.RIBBON_POS.y * SCALE_FACTOR;
-
       var canvas = document.createElement('canvas');
       var hexMask = imageAsset(this.MASK_URL);
       var ribbon = imageAsset(this.RIBBON_URL);
@@ -94,9 +83,6 @@ var Chibadge = (function() {
       options.glyphScale = options.glyphScale || 1;
       if (typeof(options.gloss) == 'undefined') options.gloss = true;
 
-      canvas.width = FULL_WIDTH;
-      canvas.height = FULL_HEIGHT;
-
       loadCanvasSources([
         hexMask,
         ribbon,
@@ -104,6 +90,17 @@ var Chibadge = (function() {
         options.glyph
       ], function(err) {
         if (err) return cb(err);
+
+        var NATIVE_BADGE_SIZE = hexMask.height() + (this.MASK_PADDING*2);
+        var FULL_WIDTH = options.size || NATIVE_BADGE_SIZE;
+        var FULL_HEIGHT = FULL_WIDTH;
+        var SCALE_FACTOR = FULL_WIDTH / NATIVE_BADGE_SIZE;
+        var MASK_PADDING = this.MASK_PADDING * SCALE_FACTOR;
+        var RIBBON_X = this.RIBBON_POS.x * SCALE_FACTOR;
+        var RIBBON_Y = this.RIBBON_POS.y * SCALE_FACTOR;
+
+        canvas.width = FULL_WIDTH;
+        canvas.height = FULL_HEIGHT;
 
         var ctx = canvas.getContext('2d');
 
@@ -147,7 +144,7 @@ var Chibadge = (function() {
                       ribbon.height() * SCALE_FACTOR);
 
         cb(null, canvas);
-      });
+      }, this);
 
       return canvas;
     },
@@ -205,7 +202,7 @@ var Chibadge = (function() {
     return new ImageCanvasSource(img);
   };
 
-  var loadCanvasSources = function loadCanvasSources(sources, cb) {
+  var loadCanvasSources = function loadCanvasSources(sources, cb, thisObj) {
     sources = sources.filter(function isSourceTruthy(s) { return !!s; });
 
     var sourcesDone = 0;
@@ -213,11 +210,11 @@ var Chibadge = (function() {
     var sourceDone = function sourceDone(err, source) {
       if (err) errors.push(err);
       if (++sourcesDone == sources.length) {
-        if (errors.length) return cb({
+        if (errors.length) return cb.call(thisObj, {
           message: "errors loading image sources",
           errors: errors
         }, sources);
-        return cb(null, sources);
+        return cb.call(thisObj, null, sources);
       }
     };
 
