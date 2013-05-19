@@ -185,9 +185,16 @@ define(function(require) {
       }
 
       if (!this._instance) {
-        $(mainHtml).appendTo(document.body);
+        if ($(".main .container").length) {
+          $(mainHtml).find(".header").nextAll().appendTo(".main .container");
+        } else
+          $(mainHtml).appendTo(document.body);
+
         $(modalsHtml).appendTo(document.body);
-        $(footerHtml).appendTo(document.body);
+
+        if (!$("footer").length)
+          $(footerHtml).appendTo(document.body);
+
         addFilenamesAsOptions(subtlepatternsTxt, "#bg-subtlepattern");
         addFilenamesAsOptions(nounprojectTxt, "#glyph-noun");
 

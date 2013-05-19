@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/studio.css">
+<title>Funky Customized Badge Studio</title>
+
+<div class="main">
+  <div class="container">
+    <div class="header row">
+      <!-- This overrides the default badge studio header. -->
+      <div class="span6 offset3">
+        <h1>Funky Customized Badge Studio</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <!-- This overrides the default badge studio footer. -->
+  <div class="container">
+    <p>This is a funky remix of 
+      <a href="https://github.com/toolness/chicago-badge-studio">Chicago 
+        Badge Studio</a>, which allows for a bit of custom branding
+      and such.</p>
+    <div style="min-height: 300px">
+      <!-- Make the footer extend to the bottom of the page
+           on taller displays. -->
+    </div>
+  </div>
+</footer>
+
+<script src="js/require-config.js"></script>
+<script src="vendor/require.js"></script>
+<script>
+require(["studio"], function(Studio) {
+  Studio.start();
+});
+</script>
