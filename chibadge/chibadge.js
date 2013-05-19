@@ -1,13 +1,5 @@
 var Chibadge = (function() {
   var Chibadge = {
-    // ## Chibadge Constants
-
-    // The URL of the hex mask for the badge, relative to the chibadge dir.
-    MASK_URL: 'hex-mask.png',
-
-    // The URL of the ribbon for the badge, relative to the chibadge dir.
-    RIBBON_URL: 'ribbon.png',
-
     // ## Chibadge.baseUrl
     //
     // This is the base URL that points to the chibadge directory, which
@@ -59,9 +51,13 @@ var Chibadge = (function() {
 
     build: function(options, cb) {
       var canvas = document.createElement('canvas');
-      var hexMask = imageAsset(this.MASK_URL);
-      var ribbon = imageAsset(this.RIBBON_URL);
+      var template = document.getElementById('chibadge-template') ||
+                     defaultTemplate();
+      var hexMask = template.querySelector('.chibadge-mask');
+      var ribbon = template.querySelector('.chibadge-ribbon');
 
+      hexMask = createCanvasSource(hexMask);
+      ribbon = createCanvasSource(ribbon);
       cb = cb || function defaultCallback(err) {
         if (err && window.console) window.console.error(err);
       };
@@ -81,11 +77,14 @@ var Chibadge = (function() {
       ], function(err) {
         if (err) return cb(err);
 
+        template.style.display = "block";
+
         var NATIVE_BADGE_SIZE = hexMask.height();
         var FULL_WIDTH = options.size || NATIVE_BADGE_SIZE;
         var FULL_HEIGHT = FULL_WIDTH;
         var SCALE_FACTOR = FULL_WIDTH / NATIVE_BADGE_SIZE;
 
+        template.style.display = "none";
         canvas.width = FULL_WIDTH;
         canvas.height = FULL_HEIGHT;
 
@@ -169,6 +168,19 @@ var Chibadge = (function() {
 
       return maskedCanvasSource;
     }
+  };
+
+  var defaultTemplate = function defaultTemplate() {
+    var div = document.createElement('div');
+    var base = Chibadge.baseUrl;
+
+    div.style.display = "none";
+    div.innerHTML = [
+      '<img class="chibadge-ribbon" src="' + base + 'ribbon.png">',
+      '<img class="chibadge-mask" src="' + base + 'hex-mask.png">'
+    ].join('');
+
+    return div;
   };
 
   var solidCanvas = function solidCanvas(width, height, color) {
