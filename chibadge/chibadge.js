@@ -1,5 +1,27 @@
 var Chibadge = (function() {
   var Chibadge = {
+    // ## Chibadge Constants
+    //
+    // Unless otherwise noted, all of the length measurements here are
+    // in pixels.
+
+    // The native length of each side of the badge, when it's not being
+    // scaled in any way.
+    NATIVE_BADGE_SIZE: 1077,
+
+    // The URL of the hex mask for the badge, relative to the chibadge dir.
+    MASK_URL: 'hex-mask.png',
+
+    // The amount of vertical and horizontal padding for the mask on the
+    // badge image, at the badge's native size.
+    MASK_PADDING: 21,
+
+    // The URL of the ribbon for the badge, relative to the chibadge dir.
+    RIBBON_URL: 'ribbon.png',
+
+    // The placement of the ribbon on the badge, at the badge's native size.
+    RIBBON_POS: {x: 0, y: 600},
+
     // ## Chibadge.baseUrl
     //
     // This is the base URL that points to the chibadge directory, which
@@ -50,15 +72,16 @@ var Chibadge = (function() {
     // when the canvas is rendered, or if an error occurred.
 
     build: function(options, cb) {
-      var FULL_WIDTH = options.size || 1077;
+      var FULL_WIDTH = options.size || this.NATIVE_BADGE_SIZE;
       var FULL_HEIGHT = FULL_WIDTH;
-      var SCALE_FACTOR = FULL_WIDTH / 1077;
-      var RIBBON_PADDING = 21 * SCALE_FACTOR;
-      var RIBBON_Y = 600 * SCALE_FACTOR;
+      var SCALE_FACTOR = FULL_WIDTH / this.NATIVE_BADGE_SIZE;
+      var MASK_PADDING = this.MASK_PADDING * SCALE_FACTOR;
+      var RIBBON_X = this.RIBBON_POS.x * SCALE_FACTOR;
+      var RIBBON_Y = this.RIBBON_POS.y * SCALE_FACTOR;
 
       var canvas = document.createElement('canvas');
-      var hexMask = imageAsset('hex-mask.png');
-      var ribbon = imageAsset('ribbon.png');
+      var hexMask = imageAsset(this.MASK_URL);
+      var ribbon = imageAsset(this.RIBBON_URL);
 
       cb = cb || function defaultCallback(err) {
         if (err && window.console) window.console.error(err);
@@ -84,7 +107,7 @@ var Chibadge = (function() {
 
         var ctx = canvas.getContext('2d');
 
-        ctx.drawImage(hexMask.source, RIBBON_PADDING, RIBBON_PADDING,
+        ctx.drawImage(hexMask.source, MASK_PADDING, MASK_PADDING,
                       hexMask.width() * SCALE_FACTOR,
                       hexMask.height() * SCALE_FACTOR);
         ctx.globalCompositeOperation = "source-in";
@@ -119,7 +142,7 @@ var Chibadge = (function() {
         }
 
         ctx.globalCompositeOperation = "source-over";
-        ctx.drawImage(ribbon.source, 0, RIBBON_Y,
+        ctx.drawImage(ribbon.source, RIBBON_X, RIBBON_Y,
                       ribbon.width() * SCALE_FACTOR,
                       ribbon.height() * SCALE_FACTOR);
 
