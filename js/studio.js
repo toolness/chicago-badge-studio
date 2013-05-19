@@ -174,6 +174,16 @@ define(function(require) {
   return {
     _instance: null,
     start: function(options) {
+      function detectMinifiedRootDir() {
+        var RE = /^(.*)\/studio\.min\.js$/;
+        var me = document.querySelector('script[src$="studio.min.js"]');
+        if (me) {
+          var parts = me.src.match(RE);
+          if (parts) return parts[1] + '/../';
+        }
+        return "";
+      }
+
       function addFilenamesAsOptions(textFile, selectElement) {
         textFile.split('\n').forEach(function(filename) {
           if (!filename) return;
@@ -201,8 +211,10 @@ define(function(require) {
         // For optimized builds, some libraries won't be able to auto-detect
         // where their assets are deployed, so we need to manually configure
         // them.
-        Chibadge.baseUrl = 'chibadge/';
-        jscolor.dir = 'vendor/jscolor/';
+        if (!Chibadge.baseUrl)
+          Chibadge.baseUrl = detectMinifiedRootDir() + 'chibadge/';
+        if (!jscolor.detectDir())
+          jscolor.dir = detectMinifiedRootDir() + 'vendor/jscolor/';
 
         jscolor.init();
         this._instance = start(options || {});
